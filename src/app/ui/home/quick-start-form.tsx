@@ -1,0 +1,208 @@
+"use client"
+
+import { useFieldArray, useForm } from "react-hook-form"
+import dynamic from "next/dynamic"
+
+// https://github.com/react-hook-form/devtools/issues/187
+const DevT: React.ElementType = dynamic(
+    () => import("@hookform/devtools").then((module) => module.DevTool),
+    { ssr: false }
+)
+
+
+type FormValues = {
+    name: string;
+    location: string;
+    email: string;
+    social: {
+        twitter: string
+        facebook: string
+    },
+    phoneNumbers: string[],
+    phNumbers: {
+        id: number,
+        number: string;
+    }[],
+    age: number
+}
+
+
+export default function QuickStartForm({ data }: { data: any }) {
+    let id = 0
+    const genId = (): number => {
+        const id2 = id++
+        console.log(id)
+        return id2
+    }
+
+    const form = useForm<FormValues>({
+        defaultValues: {
+            name: "Batman",
+            location: "",
+            email: data.email,
+            social: {
+                twitter: "",
+                facebook: ""
+            },
+            phoneNumbers: ["primary", "secondary"],
+            phNumbers: [
+                { id: genId(), number: "i fuck you" },
+                { id: genId(), number: "2" },
+                { id: genId(), number: "3" }],
+            age: 0
+        }
+    })
+
+    // const form = useForm<FormValues>({
+    //     defaultValues: async () => {
+    //
+    //         const response = await fetch("https://jsonplaceholder.typicode.com/users/3")
+    //         const data = await response.json()
+    //
+    //         return {
+    //             name: "Batman",
+    //             location: "",
+    //             email: data.email,
+    //             social: {
+    //                 twitter: "",
+    //                 facebook: ""
+    //             },
+    //             phoneNumbers: ["primary", "secondary"],
+    //             phNumbers: [{ number: "i fuck you" }, { number: "2" }, { number: "3" }]
+    //         }
+    //     }
+    // })
+
+    const { register, control, handleSubmit, formState } = form
+    const { errors } = formState
+
+
+    const { fields, append, remove } = useFieldArray({
+        name: "phNumbers",
+        control
+    })
+
+    const onSubmit = (data: FormValues) => {
+        console.log("Form Submitted.", data)
+    }
+
+    // console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    // console.log(Intl.DateTimeFormat().resolvedOptions().locale)
+
+    const addPhoneNumber = () => {
+        append({ id: genId(), number: "" })
+    }
+    return (
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <label htmlFor="name">Name of your shop:</label>
+                    <input type="text" id="name" {...register("name", {
+                        required: "Please provide your name"
+                    })} />
+                    <p style={{ color: "red" }}>{errors.name?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="location">Shop location:</label>
+                    <input type="text" id="location" {...register("location", {
+                        validate: {
+                            tooFar: (fieldValue: string) => {
+                                return true
+                                //return "location is too far"
+                            },
+                            tooNear: (fieldValue: string) => {
+                                return true
+                                //return "location is too near"
+                            },
+                            aha: (fieldValue: string) => {
+                                return true
+                            }
+                        }
+                    })} />
+                    <p style={{ color: "red" }}>{errors.location?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input type="text" id="email" {...register("email", {
+                        pattern: {
+                            value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+                            message: "Invalid email format"
+                        },
+                        validate: (fieldValue: string, fields: object) => {
+
+                            // return true/false or the error message
+
+                            return true
+                            // return false
+                        }
+                    })} />
+                    <p style={{ color: "red" }}>{errors.email?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="twitter">Twitter:</label>
+                    <input type="text" id="twitter" {...register("social.twitter")} />
+                    <p style={{ color: "red" }}>{errors.social?.twitter?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="facebook">Facebook:</label>
+                    <input type="text" id="facebook" {...register("social.facebook")} />
+                    <p style={{ color: "red" }}>{errors.social?.facebook?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="facebook">Primary Phone:</label>
+                    <input type="text" id="primary-phone" {...register("phoneNumbers.0")} />
+                    <p style={{ color: "red" }}>{errors.phoneNumbers?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="facebook">Secondary Phone:</label>
+                    <input type="text" id="secondary-phone" {...register("phoneNumbers.1")} />
+                    <p style={{ color: "red" }}>{errors.phoneNumbers?.message}</p>
+                </div>
+
+                <div>
+                    <label htmlFor="">List of phone numbers</label>
+                    <div>
+                        {
+                            fields.map((field, index) => {
+                                return (
+                                    <div key={`phNumbers.${index}.id`}>
+                                        <input type="text" {...register(`phNumbers.${index}.number`)}
+                                        />
+                                        {
+                                            index > 0 && (
+                                                <button type={"button"} onClick={() => remove(index)}>Remove</button>
+                                            )
+                                        }
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <button type={"button"} onClick={addPhoneNumber}>Add</button>
+                </div>
+
+                <div>
+                    <label htmlFor="age">Age:</label>
+                    <input type="number" id="age" {...register("age", {
+                        valueAsNumber: true,
+                        required: {
+                            value: true,
+                            message: "Age is required"
+                        }
+                    })} />
+                    <p style={{ color: "red" }}>{errors.age?.message}</p>
+                </div>
+
+                <button type={"submit"}>Submit</button>
+            </form>
+
+            <DevT control={control} placement="top-left"/>
+        </>
+    )
+}
