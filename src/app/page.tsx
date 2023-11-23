@@ -4,6 +4,8 @@ import Form from "./ui/home/quick-start-form"
 
 import Header from "./ui/header/header"
 import Footer from "./ui/footer/footer"
+import { headers } from "next/headers"
+import { GLOBAL_CONSTANTS } from "@/global-constants"
 
 const retrieveData = async () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/users/3")
@@ -11,6 +13,9 @@ const retrieveData = async () => {
 }
 
 export default async function Home() {
+
+    const headerList = headers()
+    console.log('page.tsx', headerList.get(GLOBAL_CONSTANTS.HTTP_HEADER.LANGUAGE))
 
     // the data will be included in the first 'document', you could inspect this from the debugger
     const data = await retrieveData()
@@ -23,7 +28,12 @@ export default async function Home() {
                 <Container maxWidth="sm" sx={{ marginTop: "100px" }}>
                     <div style={{ display: "flex", width: "100%", justifyContent: "center" }}>
                         <div
-                            style={{ display: "inline-flex", flexDirection: "row", justifyContent: "center", alignItems: "baseline" }}>
+                            style={{
+                                display: "inline-flex",
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                alignItems: "baseline"
+                            }}>
                             <LocalDiningTwoToneIcon
                                 sx={{ marginRight: "40px", fontSize: "60px" }}></LocalDiningTwoToneIcon>
                             <Typography variant="h1" align="center" color="textPrimary" gutterBottom>

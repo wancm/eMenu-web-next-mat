@@ -31,7 +31,6 @@ export default function QuickStartForm({ data }: { data: any }) {
     let id = 0
     const genId = (): number => {
         const id2 = id++
-        console.log(id)
         return id2
     }
 
