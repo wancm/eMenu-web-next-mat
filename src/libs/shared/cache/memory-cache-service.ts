@@ -9,7 +9,8 @@ type LocalCache = {
 
 export class MemoryCacheService implements CacheService {
 
-    private readonly defaultTTL = 30 * 60 * 1000
+    /** 1 year, expected cache invalidations to be manual */
+    private readonly defaultTTL = 365 * 24 * 60 * 1000
     private readonly cacheExpiringInterval = 1000
     private readonly cacheMap = new Map<string, any>()
 

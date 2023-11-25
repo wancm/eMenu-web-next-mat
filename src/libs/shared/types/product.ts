@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb"
 import { util } from "@/libs/shared/utils/util"
 import { appSettings } from "@/libs/appSettings"
 import { AppImageDtoSchema, AppImageEntitySchema, imageConverter } from "@/libs/shared/types/image"
+import { DateHelper } from "@/libs/shared/utils/date.helper"
 
 // Database Entities
 export const ProductEntitySchema = z.object({
@@ -26,10 +27,10 @@ export const ProductEntitySchema = z.object({
      */
     childPrice: z.number().optional(),
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(util.utcNow()),
+    createdDate: z.date().default(DateHelper.utcNowToDate()),
     updatedBy: z.instanceof(ObjectId).optional(),
-    updatedDate: z.date().default(util.utcNow()).optional(),
-    _ts: z.number().default(util.timestampUtcNow())
+    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
+    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds())
 })
 
 export type ProductEntity = z.infer<typeof ProductEntitySchema>

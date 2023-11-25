@@ -1,0 +1,12 @@
+{
+  "app": "e-menu-web",
+  "appInsights": {
+    "instrumentationKey": ""
+  },
+  "countriesSettings": [
+    {
+      "countryCode": "default",
+      "defaultLanguage": "en"
+    }
+  ]
+}

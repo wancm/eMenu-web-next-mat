@@ -102,7 +102,7 @@ if (import.meta.vitest) {
         await businessUnitRepository.startupAsync()
     })
 
-    describe("#Business Unit MongoDb repositories save", () => {
+    describe("#Business unit repo CRUD test", () => {
 
         //
         const test1 = ".saveAsync, loadOneAsync, loadManyAsync"

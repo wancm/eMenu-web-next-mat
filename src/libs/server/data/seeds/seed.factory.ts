@@ -1,11 +1,7 @@
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
 
 class SeedFactory {
-
-    masterDataRepository = new MongodbMasterDataRepository()
-
     async initAsync() {
-        await this.masterDataRepository.startupAsync()
     }
 
 }

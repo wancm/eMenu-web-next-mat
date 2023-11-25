@@ -9,7 +9,7 @@ import countryByAbbreviation from "country-json/src/country-by-abbreviation.json
 import countryByCallingCode from "country-json/src/country-by-calling-code.json"
 import countryByCurrencyCode from "country-json/src/country-by-currency-code.json"
 import commonCurrency from "@/libs/server/data/common-currency.json"
-import { Resources } from "@/libs/shared/types/resource"
+import { Resources } from "@/libs/shared/types/dictionary"
 
 export class MongodbMasterDataRepository implements MasterDataRepository {
 

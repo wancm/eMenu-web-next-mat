@@ -44,6 +44,11 @@ export class DateHelper {
         return new Date(tuple[0], tuple[1], tuple[2])
     }
 
+    static utcNowToDate(): Date {
+        // 'YYYY-MM-DD'
+        return dayjs.utc().toDate()
+    }
+
     static utcNowToDateStr(): string {
         // 'YYYY-MM-DD'
         return dayjs.utc().format(CONSTANTS.DATE_FORMAT)

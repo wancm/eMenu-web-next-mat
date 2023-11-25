@@ -5,7 +5,7 @@ import { util } from "@/libs/shared/utils/util"
 
 export class SessionServiceLogic implements SessionService {
     private readonly prefix = "SESSION-"
-    private readonly sessionTTL = 20 * 60 // 20 minutes
+    private readonly sessionTTL = 30 * 60 // 30 minutes
 
     constructor(private cacheService: CacheService) {
     }

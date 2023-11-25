@@ -1,4 +1,4 @@
-export type Resource = {
+export type DictionaryContent = {
     key: string;
     content: string;
     category?: string;
@@ -18,7 +18,11 @@ export type Resource = {
     }
 }
 
-export type Resources = {
+export type DictionaryContentFields = keyof DictionaryContent
+
+export type Dictionary = {
     identifier: string;
-    web: Resource[];
+    web: {
+        contents: DictionaryContent[]
+    }
 }

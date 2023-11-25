@@ -6,6 +6,7 @@ import Header from "./ui/header/header"
 import Footer from "./ui/footer/footer"
 import { headers } from "next/headers"
 import { GLOBAL_CONSTANTS } from "@/global-constants"
+import { serverlessFactory } from "@/libs/server/serverless-factory"
 
 const retrieveData = async () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/users/3")
@@ -14,15 +15,14 @@ const retrieveData = async () => {
 
 export default async function Home() {
 
-    const headerList = headers()
-    console.log('page.tsx', headerList.get(GLOBAL_CONSTANTS.HTTP_HEADER.LANGUAGE))
+    const client = serverlessFactory.buildClientInfoService().get()
 
-    // the data will be included in the first 'document', you could inspect this from the debugger
+    // the data will be included in the first 'document' on the site landing page (/), you could inspect this from the debugger
     const data = await retrieveData()
 
     return (
         <>
-            {/*<main>hello world</main>*/}
+            {/*<main>site-profile world</main>*/}
             <Header></Header>
             <main>
                 <Container maxWidth="sm" sx={{ marginTop: "100px" }}>

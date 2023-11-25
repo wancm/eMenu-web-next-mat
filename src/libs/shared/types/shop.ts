@@ -5,6 +5,7 @@ import { util } from "@/libs/shared/utils/util"
 import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { appSettings } from "@/libs/appSettings"
 import { addressConverter, AddressDtoSchema, AddressEntitySchema } from "@/libs/shared/types/contacts"
+import { DateHelper } from "@/libs/shared/utils/date.helper"
 
 
 export const ShopEntitySchema = z.object({
@@ -15,10 +16,10 @@ export const ShopEntitySchema = z.object({
     productIds: z.array(z.instanceof(ObjectId)).optional(),
     address: AddressEntitySchema,
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(util.utcNow()),
+    createdDate: z.date().default(DateHelper.utcNowToDate()),
     updatedBy: z.string().max(100).optional(),
-    updatedDate: z.date().default(util.utcNow()).optional(),
-    _ts: z.number().default(util.timestampUtcNow()),
+    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
+    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds()),
 })
 
 // Database Entities

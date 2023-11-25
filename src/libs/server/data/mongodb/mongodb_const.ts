@@ -4,5 +4,6 @@ export const MONGO_DB_CONSTANT = {
     COLLECTION_PERSONS: "persons",
     COLLECTION_PRODUCTS: "products",
     COLLECTION_MASTER_DATA: "master_data",
+    COLLECTION_DICTIONARIES: "dictionaries",
     IDENTIFIER: "identifier"
 } as const

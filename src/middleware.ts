@@ -3,36 +3,41 @@ import { NextResponse } from "next/server"
 import { GLOBAL_CONSTANTS } from "@/global-constants"
 import { sessionFacade } from "@/libs/server/application/facades/session-facade"
 import "@/libs/shared/extension-methods"
+import { factory } from "@/libs/server/factory"
+import { serverlessFactory } from "@/libs/server/serverless-factory"
 
-export async function middleware(request: NextRequest) {// read more. how to connect multiple middlewares
+export async function middleware(req: NextRequest) {// read more. how to connect multiple middlewares
     // https://stackoverflow.com/questions/76603369/how-to-use-multiple-middlewares-in-next-js-using-the-middleware-ts-file
 
     // Store current request url in a custom header, which you can read later
-    const requestHeaders = new Headers(request.headers)
+    const requestHeaders = new Headers(req.headers)
 
     // set origin
-    requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.ORIGIN, request.nextUrl.origin)
+    requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.ORIGIN, req.nextUrl.origin)
 
-    const sessionId = await initSession(request)
+    // set session id
+    const sessionId = await initSession(req)
     requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.SESSION_ID, sessionId)
 
-    const language =
-        request.cookies.get("NEXT_LOCALE") ?? getBrowserLanguage(request) ?? DEFAULT_LANGUAGE
+    // set client info
+    const clientInfo = serverlessFactory.buildClientInfoService().get(req)
+    requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.CLIENT_INFO, JSON.stringify(clientInfo))
 
-    requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.LANGUAGE, language.toString() ?? DEFAULT_LANGUAGE)
-
-    const response = NextResponse.next({
+    const res = NextResponse.next({
         request: {
             // Apply new request headers
             headers: requestHeaders,
         }
     })
 
-    response.cookies.set(GLOBAL_CONSTANTS.COOKIE.SESSION_ID, sessionId)
-    response.headers.set(GLOBAL_CONSTANTS.HTTP_HEADER.SESSION_ID, sessionId)
+    // set session id to response cookie
+    res.cookies.set(GLOBAL_CONSTANTS.COOKIE.SESSION_ID, sessionId)
+
+    // set session id to response header
+    res.headers.set(GLOBAL_CONSTANTS.HTTP_HEADER.SESSION_ID, sessionId)
 
 
-    return response
+    return res
 }
 
 const initSession = async (request: NextRequest): Promise<string> => {
@@ -51,28 +56,6 @@ const initSession = async (request: NextRequest): Promise<string> => {
 
     const session = await sessionFacade.initAsync()
     return session.id
-}
-
-const DEFAULT_LANGUAGE = "en"
-
-// list out all the supporting languages
-const LOCALES = ["en", "zh"]
-
-const getBrowserLanguage = (req: NextRequest) => {
-    return req.headers
-        .get("accept-language")
-        ?.split(",")
-        .map((i) => i.split(";"))
-        ?.reduce(
-            (ac: { code: string; priority: string }[], lang) => [
-                ...ac,
-                { code: lang[0], priority: lang[1] },
-            ],
-            []
-        )
-        ?.sort((a, b) => (a.priority > b.priority ? -1 : 1))
-        ?.find((i) => LOCALES.includes(i.code.substring(0, 2)))
-        ?.code?.substring(0, 2)
 }
 
 // https://nextjs.org/docs/pages/building-your-application/routing/middleware
