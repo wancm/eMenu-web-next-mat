@@ -1,5 +1,5 @@
 import { ZodObject } from "zod"
-import { util } from "@/libs/shared/utils/util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 
 export enum ZodPropConfigType {
     min = "min",
@@ -38,23 +38,23 @@ String.prototype.isEqual = function (compareVal: string): boolean {
 }
 
 String.prototype.isNilOrEmpty = function (): boolean {
-    if (util.isNil(this)) return true
+    if (AppUtil.isNil(this)) return true
     return this.trim().length === 0
 }
 
 String.prototype.toNullString = function (): string {
-    if (util.isNil(this)) return ""
-    return util.toNullString(this as string)
+    if (AppUtil.isNil(this)) return ""
+    return AppUtil.toNullString(this as string)
 }
 
 String.prototype.toNumber = function (): number {
-    if (util.isStrEmpty(this)) return 0
+    if (AppUtil.isStrEmpty(this)) return 0
     return parseFloat(this as string)
 }
 
 
 String.prototype.toDate = function (): Date {
-    if (util.isStrEmpty(this)) return undefined as any
+    if (AppUtil.isStrEmpty(this)) return undefined as any
 
     // YYYYMMDD
     if (this.length === 8) return new Date(this.substring(0, 4).toNumber(),

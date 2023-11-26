@@ -1,12 +1,11 @@
 import { z } from "zod"
 import { fromZodError } from "zod-validation-error"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { ObjectId } from "mongodb"
-import { util } from "@/libs/shared/utils/util"
 import { appSettings } from "@/libs/appSettings"
 import { contactConverter, ContactDtoSchema, ContactEntitySchema } from "@/libs/shared/types/contacts"
-import { BusinessUnit, BusinessUnitDTOSchema } from "@/libs/shared/types/business-unit"
-import { DateHelper } from "@/libs/shared/utils/date.helper"
+import { BusinessUnitDTOSchema } from "@/libs/shared/types/business-unit"
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 export enum PersonTypes {
     Undefined = "Undefined",
@@ -26,10 +25,10 @@ export const PersonEntitySchema = z.object({
     contact: ContactEntitySchema.optional(),
     type: z.nativeEnum(PersonTypes),
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(DateHelper.utcNowToDate()),
+    createdDate: z.date().default(AppDateUtil.utcNowToDate()),
     updatedBy: z.instanceof(ObjectId).optional(),
-    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
-    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds())
+    updatedDate: z.date().default(AppDateUtil.utcNowToDate()).optional(),
+    _ts: z.number().default(AppDateUtil.utcNowUnixMilliseconds())
 })
 
 // Database Entities
@@ -54,7 +53,7 @@ export type Person = z.infer<typeof PersonDtoSchema>
 export const personConverter = {
     toEntity(dto: Person, createdBy?: string): PersonEntity {
         const entity = {
-            _id: mongodbUtil.genId(dto.id),
+            _id: MongoDbUtil.genId(dto.id),
             businessUnitId: dto.businessUnitId.toObjectId(),
             email: dto.email,
             lastName: dto.lastName,
@@ -62,7 +61,7 @@ export const personConverter = {
             dateOfBirth: dto.dateOfBirth,
             contact: dto.contact ? contactConverter.toEntity(dto.contact) : undefined,
             type: dto.type,
-            createdBy: createdBy ? mongodbUtil.genIdIfNotNil(createdBy) : mongodbUtil.genIdIfNotNil(appSettings.systemId)
+            createdBy: createdBy ? MongoDbUtil.genIdIfNotNil(createdBy) : MongoDbUtil.genIdIfNotNil(appSettings.systemId)
         }
 
         const result = PersonEntitySchema.safeParse(entity)

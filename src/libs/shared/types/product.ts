@@ -1,11 +1,10 @@
 import { z } from "zod"
 import { fromZodError } from "zod-validation-error"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { ObjectId } from "mongodb"
-import { util } from "@/libs/shared/utils/util"
 import { appSettings } from "@/libs/appSettings"
 import { AppImageDtoSchema, AppImageEntitySchema, imageConverter } from "@/libs/shared/types/image"
-import { DateHelper } from "@/libs/shared/utils/date.helper"
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 // Database Entities
 export const ProductEntitySchema = z.object({
@@ -27,10 +26,10 @@ export const ProductEntitySchema = z.object({
      */
     childPrice: z.number().optional(),
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(DateHelper.utcNowToDate()),
+    createdDate: z.date().default(AppDateUtil.utcNowToDate()),
     updatedBy: z.instanceof(ObjectId).optional(),
-    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
-    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds())
+    updatedDate: z.date().default(AppDateUtil.utcNowToDate()).optional(),
+    _ts: z.number().default(AppDateUtil.utcNowUnixMilliseconds())
 })
 
 export type ProductEntity = z.infer<typeof ProductEntitySchema>
@@ -56,7 +55,7 @@ export const productConverter = {
     toEntity(dto: Product, createdBy: string): ProductEntity {
 
         const entity = {
-            _id: mongodbUtil.genId(dto.id),
+            _id: MongoDbUtil.genId(dto.id),
             businessUnitId: dto.businessUnitId.toObjectId(),
             name: dto.name,
             code: dto.code,
@@ -67,7 +66,7 @@ export const productConverter = {
             childProductIds: dto.childProductIds ? dto.childProductIds.map(id => id.toObjectId()) : [],
             isSelectable: dto.isSelectable,
             childPrice: dto.childPrice,
-            createdBy: createdBy ? mongodbUtil.genIdIfNotNil(createdBy) : mongodbUtil.genIdIfNotNil(appSettings.systemId)
+            createdBy: createdBy ? MongoDbUtil.genIdIfNotNil(createdBy) : MongoDbUtil.genIdIfNotNil(appSettings.systemId)
         }
 
         const result = ProductEntitySchema.safeParse(entity)

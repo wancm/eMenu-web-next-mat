@@ -1,9 +1,7 @@
-import { util } from "@/libs/shared/utils/util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 import { Country } from "@/libs/shared/types/country"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { CacheService } from "@/libs/server/types/services/cache-service"
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
-import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
 import { factory } from "@/libs/server/factory"
 
 class MasterDataFacade {
@@ -18,7 +16,7 @@ class MasterDataFacade {
 
         let countries = await this.cacheService.tryGetAsync<Country[]>(this.COUNTRIES_CACHE_KEY)
 
-        if (!util.isArrEmpty(countries)) {
+        if (!AppUtil.isArrEmpty(countries)) {
             return countries
         }
 

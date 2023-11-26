@@ -1,4 +1,4 @@
-import { DateHelper } from "./utils/date.helper"
+import { AppDateUtil } from "./utils/app-date-util"
 
 
 declare global {
@@ -52,38 +52,38 @@ declare global {
 
 String.prototype.toDateNumber = function (): number {
     if (!this) return 0
-    return DateHelper.dateStrToDateNumeric(this as string)
+    return AppDateUtil.dateStrToDateNumeric(this as string)
 }
 
 String.prototype.toDate = function (): Date {
     if (!this) throw Error("string is null or undefined")
-    return DateHelper.dateStrToDate(this as string)
+    return AppDateUtil.dateStrToDate(this as string)
 }
 
 String.prototype.addDays = function (daysToAdd: number): string {
     if (!this) return this
-    return DateHelper.dateStrAddDayToDateStr(this as string, daysToAdd)
+    return AppDateUtil.dateStrAddDayToDateStr(this as string, daysToAdd)
 }
 
 Number.prototype.toDateFormat = function (): string {
     if (!this) return ""
-    return DateHelper.dateNumericToDateFormat(this as number)
+    return AppDateUtil.dateNumericToDateFormat(this as number)
 }
 
 Number.prototype.toDate = function (): Date {
-    if (!this) return DateHelper.utcNowToDateStr().toDateNumber().toDate()
-    return DateHelper.dateNumericToDate(this as number)
+    if (!this) return AppDateUtil.utcNowToDateStr().toDateNumber().toDate()
+    return AppDateUtil.dateNumericToDate(this as number)
 }
 
 Date.prototype.toDateNumber = function (): number {
     if (!this) return 0
-    return DateHelper.dateToDateNumeric(this)
+    return AppDateUtil.dateToDateNumeric(this)
 }
 
 Date.prototype.toDateFormat = function (): string {
     if (!this) return ""
-    const dateNumeric = DateHelper.dateToDateNumeric(this)
-    return DateHelper.dateNumericToDateFormat(dateNumeric)
+    const dateNumeric = AppDateUtil.dateToDateNumeric(this)
+    return AppDateUtil.dateNumericToDateFormat(dateNumeric)
 }
 
 export const dateExtensionMethods = {}

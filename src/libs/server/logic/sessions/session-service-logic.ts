@@ -1,7 +1,7 @@
 import { CacheService } from "@/libs/server/types/services/cache-service"
 import { Session } from "@/libs/shared/types/session"
 import { SessionService } from "@/libs/server/types/services/session-service"
-import { util } from "@/libs/shared/utils/util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 
 export class SessionServiceLogic implements SessionService {
     private readonly prefix = "SESSION-"
@@ -16,7 +16,7 @@ export class SessionServiceLogic implements SessionService {
             sessionTTL = this.sessionTTL
         }
 
-        const id = util.genId()
+        const id = AppUtil.genId()
 
         const session = {
             id
@@ -44,14 +44,14 @@ export class SessionServiceLogic implements SessionService {
     }
 }
 
-
-if (import.meta.vitest) {
-    const { describe, expect, test, vi, afterEach } = import.meta.vitest
-    describe("#session-service-logic.ts", () => {
-
-        afterEach(() => {
-            vi.restoreAllMocks()
-        })
-
-    })
-}
+//
+// if (import.meta.vitest) {
+//     const { describe, expect, test, vi, afterEach } = import.meta.vitest
+//     describe("#session-service-logic.ts", () => {
+//
+//         afterEach(() => {
+//             vi.restoreAllMocks()
+//         })
+//
+//     })
+// }

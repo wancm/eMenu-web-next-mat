@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { fromZodError } from "zod-validation-error"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 
 export enum PhoneTypes {
     Primary = "Primary",
@@ -78,7 +78,7 @@ export const addressConverter = {
         if (!dto) return undefined
 
         const entity = {
-            id: mongodbUtil.genId(dto.id).toHexString(),
+            id: MongoDbUtil.genId(dto.id).toHexString(),
             line1: dto.line1,
             line2: dto.line2,
             line3: dto.line3,
@@ -132,7 +132,7 @@ export const phoneConverter = {
     toEntity(dto: Phone): PhoneEntity {
 
         const entity = {
-            id: mongodbUtil.genId(dto.id).toHexString(),
+            id: MongoDbUtil.genId(dto.id).toHexString(),
             number: dto.number,
             countryCodeNumber: dto.countryCodeNumber,
             type: dto.type,

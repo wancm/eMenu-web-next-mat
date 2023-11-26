@@ -1,4 +1,4 @@
-import { util } from "@/libs/shared/utils/util"
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 class AppSettings {
 
@@ -30,7 +30,7 @@ export const appSettings = new AppSettings()
 if (import.meta.vitest) {
     const { describe, expect, test } = import.meta.vitest
 
-    describe("# util.ts", () => {
+    describe("# app-util.ts", () => {
         const test1 = ".isProd"
         test.concurrent(test1, async () => {
             console.time(test1)
@@ -44,8 +44,8 @@ if (import.meta.vitest) {
         test.concurrent(test2, async () => {
             console.time(test2)
 
-            util.dateToTimestamp(appSettings.defaultDate)
-            expect(appSettings.defaultDate).not.toBeUndefined()
+            const date = AppDateUtil.dateToDateNumeric(appSettings.defaultDate)
+            expect(date > 0).toBeTruthy()
 
             console.timeEnd(test2)
         })

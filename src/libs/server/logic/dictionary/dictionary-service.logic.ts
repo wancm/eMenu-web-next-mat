@@ -3,7 +3,7 @@ import { DictionaryService } from "@/libs/shared/types/services/dictionary.servi
 import { CacheService } from "@/libs/server/types/services/cache-service"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { CONSTANTS } from "@/libs/shared/constants"
-import { util } from "@/libs/shared/utils/util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
@@ -129,12 +129,12 @@ export class DictionaryServiceLogic implements DictionaryService {
             if (key === "key") return
 
             // if property is an object type
-            if (util.isObject(objToCheckForOverrideableProp[key])) {
+            if (AppUtil.isObject(objToCheckForOverrideableProp[key])) {
                 // recursive loop to check for override-able property
                 this.objPropOverridden(obj[key], objToCheckForOverrideableProp[key])
             } else {
                 // if overridden prop available
-                if (!util.isNil(objToCheckForOverrideableProp[key])) {
+                if (!AppUtil.isNil(objToCheckForOverrideableProp[key])) {
                     // override the property
                     obj[key] = objToCheckForOverrideableProp[key]
                 }
@@ -178,10 +178,10 @@ if (import.meta.vitest) {
 
             const dictionary = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
 
-            expect(dictionary?.web.contents.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+            expect(dictionary?.web?.contents?.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
 
             const dictionary2 = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
-            expect(dictionary2?.web.contents.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+            expect(dictionary2?.web?.contents?.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
 
             console.timeEnd(test1)
         }, 1200000)

@@ -7,8 +7,8 @@ import { testHelper } from "@/libs/shared/utils/test-helper"
 import { MongodbMasterDataRepository } from "./mongodb-master-data.repository"
 import { Person, personConverter, PersonEntity, PersonTypes } from "@/libs/shared/types/person"
 import { AddressTypes, PhoneTypes } from "@/libs/shared/types/contacts"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
-import { util } from "@/libs/shared/utils/util"
+import { MongoDbUtil, MongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 import { businessUnitConverter, BusinessUnitEntity } from "@/libs/shared/types/business-unit"
 import { PersonRepository } from "@/libs/server/types/repositories/person-repository"
 import { MongodbBusinessUnitsRepository } from "@/libs/server/data/repositories/mongodb-business-units.repository"
@@ -145,14 +145,14 @@ export class MongoDbPersonRepository implements PersonRepository {
         for await (const doc of aggCursor) {
             const person = personConverter.toDTO(doc)
 
-            if (!util.isArrEmpty(doc.businessUnit_docs)) {
+            if (!AppUtil.isArrEmpty(doc.businessUnit_docs)) {
                 person.businessUnit = businessUnitConverter.toDTO(doc.businessUnit_docs[0])
             }
 
             persons.push(person)
         }
 
-        return !util.isArrEmpty(persons) ? persons[0] : undefined
+        return !AppUtil.isArrEmpty(persons) ? persons[0] : undefined
     }
 
     async existsEmailAsync(email: string): Promise<boolean> {
@@ -189,7 +189,7 @@ export class MongoDbPersonRepository implements PersonRepository {
             persons.push(personConverter.toDTO(doc))
         }
 
-        return !util.isArrEmpty(persons) ? persons[0] : undefined
+        return !AppUtil.isArrEmpty(persons) ? persons[0] : undefined
     }
 }
 
@@ -260,7 +260,7 @@ if (import.meta.vitest) {
         test(test2, async () => {
             console.time(test2)
 
-            const businessUnitId = mongodbUtil.genId().toHexString()
+            const businessUnitId = MongoDbUtil.genId().toHexString()
 
             await businessUnitRepository.saveAsync({
                 id: businessUnitId,

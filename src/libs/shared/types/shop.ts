@@ -1,11 +1,11 @@
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { fromZodError } from "zod-validation-error"
-import { util } from "@/libs/shared/utils/util"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { appSettings } from "@/libs/appSettings"
 import { addressConverter, AddressDtoSchema, AddressEntitySchema } from "@/libs/shared/types/contacts"
-import { DateHelper } from "@/libs/shared/utils/date.helper"
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 
 export const ShopEntitySchema = z.object({
@@ -16,10 +16,10 @@ export const ShopEntitySchema = z.object({
     productIds: z.array(z.instanceof(ObjectId)).optional(),
     address: AddressEntitySchema,
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(DateHelper.utcNowToDate()),
+    createdDate: z.date().default(AppDateUtil.utcNowToDate()),
     updatedBy: z.string().max(100).optional(),
-    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
-    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds()),
+    updatedDate: z.date().default(AppDateUtil.utcNowToDate()).optional(),
+    _ts: z.number().default(AppDateUtil.utcNowUnixMilliseconds()),
 })
 
 // Database Entities
@@ -41,15 +41,15 @@ export const shopConverter = {
     toEntity(dto: Shop, createdBy: string): ShopEntity {
 
         const entity = {
-            _id: mongodbUtil.genId(dto.id),
+            _id: MongoDbUtil.genId(dto.id),
             businessUnitId: dto.businessUnitId.toObjectId(),
             name: dto.name,
             personIds: dto.personIds?.map(id => id.toObjectId()),
-            productIds: !util.isArrEmpty(dto.productIds) ?
+            productIds: !AppUtil.isArrEmpty(dto.productIds) ?
                 dto.productIds.map(id => id.toObjectId())
                 : [],
             address: addressConverter.toEntity(dto.address),
-            createdBy: createdBy ? mongodbUtil.genIdIfNotNil(createdBy) : mongodbUtil.genIdIfNotNil(appSettings.systemId)
+            createdBy: createdBy ? MongoDbUtil.genIdIfNotNil(createdBy) : MongoDbUtil.genIdIfNotNil(appSettings.systemId)
         }
 
         const result = ShopEntitySchema.safeParse(entity)

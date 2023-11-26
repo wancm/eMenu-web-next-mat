@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
-import { util } from "@/libs/shared/utils/util"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { AppUtil } from "@/libs/shared/utils/app-util"
 
 declare global {
     interface String {
@@ -9,8 +9,8 @@ declare global {
 }
 
 String.prototype.toObjectId = function (): ObjectId {
-    if (util.isStrEmpty(this)) return undefined as any
-    return mongodbUtil.genId(this.toString())
+    if (AppUtil.isStrEmpty(this)) return undefined as any
+    return MongoDbUtil.genId(this.toString())
 }
 
 if (import.meta.vitest) {

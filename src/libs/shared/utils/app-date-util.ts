@@ -4,7 +4,7 @@ import { CONSTANTS } from "@/libs/shared/constants"
 
 dayjs.extend(utc)
 
-export class DateHelper {
+export class AppDateUtil {
     static dateDiffInDays(date1Str: string, date2Str: string) {
         const date1 = dayjs(date1Str)
         const date2 = dayjs(date2Str)
@@ -130,7 +130,7 @@ export class DateHelper {
 
 if (import.meta.vitest) {
     const { describe, expect, test, vi, afterEach } = import.meta.vitest
-    describe("#date.helper.ts", () => {
+    describe("#app-date-util.ts", () => {
 
         afterEach(() => {
             vi.restoreAllMocks()
@@ -140,8 +140,8 @@ if (import.meta.vitest) {
         test.concurrent(test1, async () => {
             console.time(test1)
 
-            const unix = DateHelper.utcNowUnixMilliseconds()
-            const dateStr = DateHelper.unixMillisecondsToDayStr(unix)
+            const unix = AppDateUtil.utcNowUnixMilliseconds()
+            const dateStr = AppDateUtil.unixMillisecondsToDayStr(unix)
 
             expect(dateStr).toEqual(dayjs().format(CONSTANTS.DATE_FORMAT))
 
@@ -152,12 +152,12 @@ if (import.meta.vitest) {
         test.concurrent(test2, async () => {
             console.time(test2)
 
-            const unix = DateHelper.utcNowUnixMilliseconds()
+            const unix = AppDateUtil.utcNowUnixMilliseconds()
             const timespan = unix + 120 * 1000
 
-            const date = DateHelper.unixMillisecondsToDate(timespan)
+            const date = AppDateUtil.unixMillisecondsToDate(timespan)
 
-            expect(DateHelper.dateNumericToDateFormat(DateHelper.dateToDateNumeric(date))).toEqual(dayjs().format(CONSTANTS.DATE_FORMAT))
+            expect(AppDateUtil.dateNumericToDateFormat(AppDateUtil.dateToDateNumeric(date))).toEqual(dayjs().format(CONSTANTS.DATE_FORMAT))
 
             console.timeEnd(test2)
         })

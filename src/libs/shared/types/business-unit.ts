@@ -1,10 +1,9 @@
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { fromZodError } from "zod-validation-error"
-import { util } from "@/libs/shared/utils/util"
-import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
+import { MongoDbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { appSettings } from "@/libs/appSettings"
-import { DateHelper } from "@/libs/shared/utils/date.helper"
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 // https://zzdjk6.medium.com/typescript-zod-and-mongodb-a-guide-to-orm-free-data-access-layers-f83f39aabdf3
 
@@ -12,10 +11,10 @@ export const BusinessUnitEntitySchema = z.object({
     _id: z.instanceof(ObjectId),
     name: z.string().max(100).min(3),
     createdBy: z.instanceof(ObjectId),
-    createdDate: z.date().default(DateHelper.utcNowToDate()),
+    createdDate: z.date().default(AppDateUtil.utcNowToDate()),
     updatedBy: z.string().max(100).optional(),
-    updatedDate: z.date().default(DateHelper.utcNowToDate()).optional(),
-    _ts: z.number().default(DateHelper.utcNowUnixMilliseconds)
+    updatedDate: z.date().default(AppDateUtil.utcNowToDate()).optional(),
+    _ts: z.number().default(AppDateUtil.utcNowUnixMilliseconds)
 })
 
 // Database Entities
@@ -35,9 +34,9 @@ export const businessUnitConverter = {
     toEntity(dto: BusinessUnit, createdBy?: string): BusinessUnitEntity {
 
         const entity = {
-            _id: mongodbUtil.genId(dto.id),
+            _id: MongoDbUtil.genId(dto.id),
             name: dto.name,
-            createdBy: createdBy ? mongodbUtil.genIdIfNotNil(createdBy) : mongodbUtil.genIdIfNotNil(appSettings.systemId)
+            createdBy: createdBy ? MongoDbUtil.genIdIfNotNil(createdBy) : MongoDbUtil.genIdIfNotNil(appSettings.systemId)
         }
 
         const result = BusinessUnitEntitySchema.safeParse(entity)

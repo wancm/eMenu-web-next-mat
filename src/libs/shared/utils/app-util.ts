@@ -1,17 +1,16 @@
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
-import { appSettings } from "@/libs/appSettings"
 import { v4 as uuidv4 } from "uuid"
 
 dayjs.extend(utc)
 
-class Util {
+export class AppUtil {
     /**
      * Check if input is String type.
      * @return true if it's String type.
      * @return false if nil.
      */
-    isStr(val: unknown): val is string {
+    static isStr(val: unknown): val is string {
         if (this.isNil(val)) return false
         // https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript
         return (typeof val === "string" || val instanceof String)
@@ -22,7 +21,7 @@ class Util {
      * @return true if it's Number type.
      * @return false if nil.
      */
-    isNumber(val: unknown): val is number {
+    static isNumber(val: unknown): val is number {
         if (this.isNil(val)) return false
         // https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript
         return (typeof val === "number")
@@ -33,7 +32,7 @@ class Util {
      * @return true if it's Boolean type.
      * @return false if nil.
      */
-    isBoolean(val: unknown): val is boolean {
+    static isBoolean(val: unknown): val is boolean {
         if (this.isNil(val)) return false
         // https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript
         return (typeof val === "boolean")
@@ -45,7 +44,7 @@ class Util {
      * @return true if it's Array type.
      * @return false if nil.
      */
-    isObject(val: unknown): val is object {
+    static isObject(val: unknown): val is object {
         if (this.isNil(val)) return false
         // https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript
         return (typeof val === "object")
@@ -56,7 +55,7 @@ class Util {
      * @return true if it's object type.
      * @return false if nil.
      */
-    isDate(val: unknown): val is Date {
+    static isDate(val: unknown): val is Date {
         if (this.isNil(val)) return false
         // https://stackoverflow.com/questions/643782/how-to-check-whether-an-object-is-a-date
         if ((val instanceof Date)) return true
@@ -68,7 +67,7 @@ class Util {
      * Check if input is null or undefined.
      * @return true if it's undefined / null.
      */
-    isNil(val: unknown): val is null | undefined {
+    static isNil(val: unknown): val is null | undefined {
         // https://builtin.com/software-engineering-perspectives/javascript-null-check
         return val === undefined || val === null
     }
@@ -78,7 +77,7 @@ class Util {
      * @return false if not an empty string.
      * @return true if nil.
      */
-    isStrEmpty(val: unknown): val is null | undefined {
+    static isStrEmpty(val: unknown): val is null | undefined {
         if (this.isNil(val)) return true
         return val?.toString().trim().length === 0
 
@@ -90,7 +89,7 @@ class Util {
      * @returns true if nil.
      * @error if input is not an array.
      */
-    isArrEmpty(arr: unknown): arr is null | undefined {
+    static isArrEmpty(arr: unknown): arr is null | undefined {
         if (this.isNil(arr)) return true
         if (!Array.isArray(arr)) throw Error("@arr is not an array")
         return arr.length === 0
@@ -101,12 +100,12 @@ class Util {
      * @returns empty string if input is null
      * @returns the input
      */
-    toNullString(val?: string | null | undefined): string {
-        if (util.isStrEmpty(val)) return ""
+    static toNullString(val?: string | null | undefined): string {
+        if (this.isStrEmpty(val)) return ""
         return val as string
     }
 
-    mapSetJsonStringify(map: Map<string, any>): string {
+    static mapSetJsonStringify(map: Map<string, any>): string {
 
         // https://www.youtube.com/watch?v=hubQQ3F337A
 
@@ -124,7 +123,7 @@ class Util {
         }, 2)
     }
 
-    mapSetJsonParse(json: string): Map<string, any> | Set<any> {
+    static mapSetJsonParse(json: string): Map<string, any> | Set<any> {
 
         // https://www.youtube.com/watch?v=hubQQ3F337A
 
@@ -143,18 +142,9 @@ class Util {
     }
 
     /**
-     * Convert string "YYYYMMDD" to Date without time
-     * @param val "YYYYMMDD"
-     */
-    strToDate(val: string): Date {
-        if (this.isNil(val)) return appSettings.defaultDate
-        return new Date()
-    }
-
-    /**
      * Date without time equality comparison
      */
-    dateEqual(date1: Date, date2: Date): boolean {
+    static dateEqual(date1: Date, date2: Date): boolean {
         // https://stackoverflow.com/questions/1090815/how-to-clone-a-date-object
         const clone1 = new Date(date1.getTime())
         const clone2 = new Date(date2.getTime())
@@ -165,34 +155,32 @@ class Util {
         return clone1.getTime() === clone2.getTime()
     }
 
-    delay(ms: number): Promise<void> {
+    static delay(ms: number): Promise<void> {
         // https://stackoverflow.com/questions/37764665/how-to-implement-sleep-function-in-typescript
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    genId(): string {
+    static genId(): string {
         return uuidv4()
     }
 }
 
-export const util = new Util()
-
 if (import.meta.vitest) {
     const { describe, expect, test, vi } = import.meta.vitest
 
-    describe("# util.ts", () => {
+    describe("# app-util.ts", () => {
         const test1 = ".isNil()"
         test.concurrent(test1, async () => {
             console.time(test1)
 
-            expect(util.isNil(undefined)).toBeTruthy()
-            expect(util.isNil(null)).toBeTruthy()
+            expect(AppUtil.isNil(undefined)).toBeTruthy()
+            expect(AppUtil.isNil(null)).toBeTruthy()
 
-            expect(util.isNil({})).toBeFalsy()
-            expect(util.isNil(false)).toBeFalsy()
-            expect(util.isNil(true)).toBeFalsy()
-            expect(util.isNil("")).toBeFalsy()
-            expect(util.isNil(0)).toBeFalsy()
+            expect(AppUtil.isNil({})).toBeFalsy()
+            expect(AppUtil.isNil(false)).toBeFalsy()
+            expect(AppUtil.isNil(true)).toBeFalsy()
+            expect(AppUtil.isNil("")).toBeFalsy()
+            expect(AppUtil.isNil(0)).toBeFalsy()
 
             console.timeEnd(test1)
         })
@@ -202,16 +190,16 @@ if (import.meta.vitest) {
             console.time(test2)
 
             const str: string = ""
-            expect(util.isStrEmpty(str)).toBeTruthy()
-            expect(util.isStrEmpty("")).toBeTruthy()
-            expect(util.isStrEmpty("  ")).toBeTruthy()
-            expect(util.isStrEmpty("     ")).toBeTruthy()
-            expect(util.isStrEmpty(undefined)).toBeTruthy()
-            expect(util.isStrEmpty(null)).toBeTruthy()
+            expect(AppUtil.isStrEmpty(str)).toBeTruthy()
+            expect(AppUtil.isStrEmpty("")).toBeTruthy()
+            expect(AppUtil.isStrEmpty("  ")).toBeTruthy()
+            expect(AppUtil.isStrEmpty("     ")).toBeTruthy()
+            expect(AppUtil.isStrEmpty(undefined)).toBeTruthy()
+            expect(AppUtil.isStrEmpty(null)).toBeTruthy()
 
-            expect(util.isStrEmpty("a")).toBeFalsy()
-            expect(util.isStrEmpty(1)).toBeFalsy()
-            expect(util.isStrEmpty(true)).toBeFalsy()
+            expect(AppUtil.isStrEmpty("a")).toBeFalsy()
+            expect(AppUtil.isStrEmpty(1)).toBeFalsy()
+            expect(AppUtil.isStrEmpty(true)).toBeFalsy()
 
             console.timeEnd(test2)
         })
@@ -220,18 +208,18 @@ if (import.meta.vitest) {
         test.concurrent(test2, async () => {
             console.time(test3)
 
-            expect(util.isArrEmpty([1, 2, 3])).toBeFalsy()
-            expect(util.isArrEmpty(["1", "2", 3])).toBeFalsy()
-            expect(util.isArrEmpty(["1", 2, { a: "a" }])).toBeFalsy()
+            expect(AppUtil.isArrEmpty([1, 2, 3])).toBeFalsy()
+            expect(AppUtil.isArrEmpty(["1", "2", 3])).toBeFalsy()
+            expect(AppUtil.isArrEmpty(["1", 2, { a: "a" }])).toBeFalsy()
 
-            expect(util.isArrEmpty([])).toBeTruthy()
-            expect(util.isArrEmpty(null)).toBeTruthy()
-            expect(util.isArrEmpty(undefined)).toBeTruthy()
+            expect(AppUtil.isArrEmpty([])).toBeTruthy()
+            expect(AppUtil.isArrEmpty(null)).toBeTruthy()
+            expect(AppUtil.isArrEmpty(undefined)).toBeTruthy()
 
             // https://stackoverflow.com/questions/74487468/how-to-write-a-unit-test-in-vitest-that-expects-an-error
-            expect(() => util.isArrEmpty("")).toThrowError()
-            expect(() => util.isArrEmpty(123)).toThrowError()
-            expect(() => util.isArrEmpty(true)).toThrowError()
+            expect(() => AppUtil.isArrEmpty("")).toThrowError()
+            expect(() => AppUtil.isArrEmpty(123)).toThrowError()
+            expect(() => AppUtil.isArrEmpty(true)).toThrowError()
 
             console.timeEnd(test3)
         })
@@ -240,18 +228,18 @@ if (import.meta.vitest) {
         test.concurrent(test4, async () => {
             console.time(test4)
 
-            expect(util.isStr("")).toBeTruthy()
-            expect(util.isStr("abc")).toBeTruthy()
-            expect(util.isStr("null")).toBeTruthy()
-            expect(util.isStr("undefined")).toBeTruthy()
+            expect(AppUtil.isStr("")).toBeTruthy()
+            expect(AppUtil.isStr("abc")).toBeTruthy()
+            expect(AppUtil.isStr("null")).toBeTruthy()
+            expect(AppUtil.isStr("undefined")).toBeTruthy()
 
-            expect(util.isStr(null)).toBeFalsy()
-            expect(util.isStr(undefined)).toBeFalsy()
-            expect(util.isStr(123)).toBeFalsy()
-            expect(util.isStr(true)).toBeFalsy()
-            expect(util.isStr([])).toBeFalsy()
-            expect(util.isStr(new Date())).toBeFalsy()
-            expect(util.isStr({ a: 1 })).toBeFalsy()
+            expect(AppUtil.isStr(null)).toBeFalsy()
+            expect(AppUtil.isStr(undefined)).toBeFalsy()
+            expect(AppUtil.isStr(123)).toBeFalsy()
+            expect(AppUtil.isStr(true)).toBeFalsy()
+            expect(AppUtil.isStr([])).toBeFalsy()
+            expect(AppUtil.isStr(new Date())).toBeFalsy()
+            expect(AppUtil.isStr({ a: 1 })).toBeFalsy()
 
             console.timeEnd(test4)
         })
@@ -260,16 +248,16 @@ if (import.meta.vitest) {
         test.concurrent(test5, async () => {
             console.time(test5)
 
-            expect(util.isNumber(123)).toBeTruthy()
-            expect(util.isNumber(123.45)).toBeTruthy()
+            expect(AppUtil.isNumber(123)).toBeTruthy()
+            expect(AppUtil.isNumber(123.45)).toBeTruthy()
 
-            expect(util.isNumber(null)).toBeFalsy()
-            expect(util.isNumber(undefined)).toBeFalsy()
-            expect(util.isNumber("123")).toBeFalsy()
-            expect(util.isNumber(true)).toBeFalsy()
-            expect(util.isNumber([])).toBeFalsy()
-            expect(util.isNumber(new Date())).toBeFalsy()
-            expect(util.isNumber({ a: 1 })).toBeFalsy()
+            expect(AppUtil.isNumber(null)).toBeFalsy()
+            expect(AppUtil.isNumber(undefined)).toBeFalsy()
+            expect(AppUtil.isNumber("123")).toBeFalsy()
+            expect(AppUtil.isNumber(true)).toBeFalsy()
+            expect(AppUtil.isNumber([])).toBeFalsy()
+            expect(AppUtil.isNumber(new Date())).toBeFalsy()
+            expect(AppUtil.isNumber({ a: 1 })).toBeFalsy()
 
             console.timeEnd(test5)
         })
@@ -278,16 +266,16 @@ if (import.meta.vitest) {
         test.concurrent(test6, async () => {
             console.time(test6)
 
-            expect(util.isBoolean(true)).toBeTruthy()
-            expect(util.isBoolean(false)).toBeTruthy()
+            expect(AppUtil.isBoolean(true)).toBeTruthy()
+            expect(AppUtil.isBoolean(false)).toBeTruthy()
 
-            expect(util.isBoolean(null)).toBeFalsy()
-            expect(util.isBoolean(undefined)).toBeFalsy()
-            expect(util.isBoolean(123)).toBeFalsy()
-            expect(util.isBoolean("123")).toBeFalsy()
-            expect(util.isBoolean([])).toBeFalsy()
-            expect(util.isBoolean(new Date())).toBeFalsy()
-            expect(util.isBoolean({ a: 1 })).toBeFalsy()
+            expect(AppUtil.isBoolean(null)).toBeFalsy()
+            expect(AppUtil.isBoolean(undefined)).toBeFalsy()
+            expect(AppUtil.isBoolean(123)).toBeFalsy()
+            expect(AppUtil.isBoolean("123")).toBeFalsy()
+            expect(AppUtil.isBoolean([])).toBeFalsy()
+            expect(AppUtil.isBoolean(new Date())).toBeFalsy()
+            expect(AppUtil.isBoolean({ a: 1 })).toBeFalsy()
 
             console.timeEnd(test6)
         })
@@ -296,16 +284,16 @@ if (import.meta.vitest) {
         test.concurrent(test7, async () => {
             console.time(test7)
 
-            expect(util.isObject({})).toBeTruthy()
-            expect(util.isObject({ a: 1 })).toBeTruthy()
-            expect(util.isObject(new Date())).toBeTruthy()
-            expect(util.isObject([])).toBeTruthy()
+            expect(AppUtil.isObject({})).toBeTruthy()
+            expect(AppUtil.isObject({ a: 1 })).toBeTruthy()
+            expect(AppUtil.isObject(new Date())).toBeTruthy()
+            expect(AppUtil.isObject([])).toBeTruthy()
 
-            expect(util.isObject(null)).toBeFalsy()
-            expect(util.isObject(undefined)).toBeFalsy()
-            expect(util.isObject(123)).toBeFalsy()
-            expect(util.isObject("123")).toBeFalsy()
-            expect(util.isObject(true)).toBeFalsy()
+            expect(AppUtil.isObject(null)).toBeFalsy()
+            expect(AppUtil.isObject(undefined)).toBeFalsy()
+            expect(AppUtil.isObject(123)).toBeFalsy()
+            expect(AppUtil.isObject("123")).toBeFalsy()
+            expect(AppUtil.isObject(true)).toBeFalsy()
 
             console.timeEnd(test7)
         })
@@ -314,18 +302,18 @@ if (import.meta.vitest) {
         test.concurrent(test8, async () => {
             console.time(test8)
 
-            expect(util.isDate(new Date())).toBeTruthy()
+            expect(AppUtil.isDate(new Date())).toBeTruthy()
 
             const now = dayjs()
-            expect(util.isDate(now.toDate())).toBeTruthy()
+            expect(AppUtil.isDate(now.toDate())).toBeTruthy()
 
-            expect(util.isDate(null)).toBeFalsy()
-            expect(util.isDate(undefined)).toBeFalsy()
-            expect(util.isDate(123)).toBeFalsy()
-            expect(util.isDate("123")).toBeFalsy()
-            expect(util.isDate(true)).toBeFalsy()
-            expect(util.isDate([])).toBeFalsy()
-            expect(util.isDate({ a: 1 })).toBeFalsy()
+            expect(AppUtil.isDate(null)).toBeFalsy()
+            expect(AppUtil.isDate(undefined)).toBeFalsy()
+            expect(AppUtil.isDate(123)).toBeFalsy()
+            expect(AppUtil.isDate("123")).toBeFalsy()
+            expect(AppUtil.isDate(true)).toBeFalsy()
+            expect(AppUtil.isDate([])).toBeFalsy()
+            expect(AppUtil.isDate({ a: 1 })).toBeFalsy()
 
             console.timeEnd(test8)
         })
@@ -334,10 +322,10 @@ if (import.meta.vitest) {
         test.concurrent(test12, async () => {
             console.time(test12)
 
-            expect(util.toNullString(undefined)).toEqual("")
-            expect(util.toNullString(null)).toEqual("")
-            expect(util.toNullString("")).toEqual("")
-            expect(util.toNullString("123")).toEqual("123")
+            expect(AppUtil.toNullString(undefined)).toEqual("")
+            expect(AppUtil.toNullString(null)).toEqual("")
+            expect(AppUtil.toNullString("")).toEqual("")
+            expect(AppUtil.toNullString("123")).toEqual("123")
 
             console.timeEnd(test12)
         })
@@ -352,10 +340,10 @@ if (import.meta.vitest) {
             map.set("key3", true)
             map.set("key4", new Date().toDateString())
 
-            const json = util.mapSetJsonStringify(map)
+            const json = AppUtil.mapSetJsonStringify(map)
             expect(json.length).toBeGreaterThan(0)
 
-            const parseMap = util.mapSetJsonParse(json) as Map<string, any>
+            const parseMap = AppUtil.mapSetJsonParse(json) as Map<string, any>
             parseMap.forEach((_, key: string) => {
                 expect(map.has(key)).toBeTruthy()
                 try {
@@ -373,7 +361,7 @@ if (import.meta.vitest) {
             console.time(test14)
 
             const now = dayjs()
-            const result = util.dateEqual(now.toDate(), new Date())
+            const result = AppUtil.dateEqual(now.toDate(), new Date())
             expect(result).toBeTruthy()
 
             console.timeEnd(test14)
