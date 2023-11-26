@@ -1,16 +1,25 @@
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
+import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
 
 class SeedFactory {
-    async initAsync() {
+
+    dictionaryRepository: MongodbDictionaryRepository
+    masterDataRepository: MongodbMasterDataRepository
+
+    constructor() {
+        this.dictionaryRepository = new MongodbDictionaryRepository()
+        this.masterDataRepository = new MongodbMasterDataRepository()
     }
 
+    async initAsync() {
+    }
 }
-
-export const seedFactory = new SeedFactory();
 
 // https://stackoverflow.com/questions/40745153/es8-immediately-invoked-async-function-expression
 (async () => {
-    await seedFactory.initAsync()
+    await new SeedFactory().initAsync()
 })().catch(err => {
     console.error(err)
 })
+
+export const seedFactory = new SeedFactory()

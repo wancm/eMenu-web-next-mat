@@ -7,7 +7,7 @@ import { UrlTypes } from "@/libs/shared/types/image"
 import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import { appMongodb } from "@/libs/server/data/mongodb/mongodb-database"
 import { ProductRepository } from "@/libs/server/types/repositories/product-repository"
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 
 export class MongoDbProductRepository implements ProductRepository {
 
@@ -124,7 +124,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.loadCountriesAsync()
+            const countries = await masterDataRepository.getCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockProduct = async (): Promise<Product> => {

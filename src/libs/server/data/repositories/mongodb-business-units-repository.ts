@@ -4,7 +4,7 @@ import { BusinessUnit, businessUnitConverter, BusinessUnitEntity } from "@/libs/
 import { testHelper } from "@/libs/shared/utils/test-helper"
 import { appMongodb } from "@/libs/server/data/mongodb/mongodb-database"
 import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { BusinessUnitsRepository } from "@/libs/server/types/repositories/business-units-repository"
 
 export class MongoDbBusinessUnitsRepository implements BusinessUnitsRepository {
@@ -111,7 +111,7 @@ if (import.meta.vitest) {
 
             const countryCode = "MY"
 
-            let countries = await masterDataRepository.loadCountriesAsync()
+            let countries = await masterDataRepository.getCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockBusinessUnit = async () => {

@@ -4,11 +4,12 @@ import { serverlessFactory } from "@/libs/server/serverless-factory"
 
 export class SessionFacade {
 
+    // session lives for 20 minutes
+    private sessionTTL = 20 * 60
     private sessionService: SessionService = serverlessFactory.buildSessionService()
 
     async initAsync(): Promise<Session> {
-        // init session that lives for 20 minutes
-        return this.sessionService.initAsync(20 * 60)
+        return this.sessionService.initAsync(this.sessionTTL)
     }
 
     async getAsync(id: string): Promise<Session> {
@@ -16,7 +17,7 @@ export class SessionFacade {
     }
 
     async resetExpiryAsync(id: string): Promise<number> {
-        return await this.sessionService.resetExpiryAsync(id)
+        return await this.sessionService.resetExpiryAsync(id, this.sessionTTL)
     }
 }
 

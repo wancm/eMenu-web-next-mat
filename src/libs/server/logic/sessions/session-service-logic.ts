@@ -35,8 +35,12 @@ export class SessionServiceLogic implements SessionService {
         return await this.cacheService.tryExpiredAsync(`${this.prefix}${id}`)
     }
 
-    async resetExpiryAsync(id: string): Promise<number> {
-        return await this.cacheService.extendExpiryAsync(`${this.prefix}${id}`, this.sessionTTL)
+    async resetExpiryAsync(id: string, sessionTTL: number = 0): Promise<number> {
+        if (!(sessionTTL > 0)) {
+            sessionTTL = this.sessionTTL
+        }
+
+        return await this.cacheService.extendExpiryAsync(`${this.prefix}${id}`, sessionTTL)
     }
 }
 

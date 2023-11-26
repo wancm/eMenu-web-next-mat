@@ -1,8 +1,10 @@
 import { Country } from "@/libs/shared/types/country"
-import { ObjectId } from "mongodb"
+import { AppSettings } from "@/libs/server/types/app-settings"
 
 export type MasterDataRepository = {
-    loadCountriesAsync(): Promise<Country[]>
+    getAppSettingsAsync(): Promise<AppSettings>
 
-    saveCountriesAsync(countries: Country[]): Promise<ObjectId>
+    getCountriesAsync(): Promise<Country[]>
+
+    saveCountriesAsync(countries: Country[]): Promise<string>
 }

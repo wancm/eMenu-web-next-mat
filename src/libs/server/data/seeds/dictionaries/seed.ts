@@ -1,11 +1,10 @@
 import fs from "fs/promises"
 import path from "path"
 import { Dictionary } from "@/libs/shared/types/dictionary"
-import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
 
 export class Seed {
-    constructor(private dictionaryRepository: DictionaryRepository) {
+    constructor(private dictionaryRepository: MongodbDictionaryRepository) {
     }
 
     async runAsync(): Promise<number> {
@@ -38,9 +37,6 @@ export class Seed {
 if (import.meta.vitest) {
     const { describe, expect, test, beforeEach } = import.meta.vitest
 
-    const dictionaryRepository = new MongodbDictionaryRepository()
-    const seed = new Seed(dictionaryRepository)
-
     beforeEach(async (context) => {
     })
 
@@ -49,7 +45,13 @@ if (import.meta.vitest) {
         const test1 = ".run()"
         test(test1, async () => {
             console.time(test1)
+
+            const repo = new MongodbDictionaryRepository()
+            await repo.startupAsync()
+
+            const seed = new Seed(repo)
             const result = await seed.runAsync()
+
             expect(result > -1).toBeTruthy()
 
             console.timeEnd(test1)

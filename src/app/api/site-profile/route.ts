@@ -1,30 +1,18 @@
 import { NextResponse } from "next/server"
 import { factory } from "@/libs/server/factory"
-import path from "path"
-import fs from "fs/promises"
 
 const cacheKey = "APP-SETTINGS"
 
 export async function GET() {
+
     const cacheService = factory.buildCacheService()
-    let appSettings = cacheService.tryGetAsync(cacheKey)
 
-    if (appSettings) return NextResponse.json(appSettings)
+    let appSettings = await cacheService.tryGetAsync(cacheKey)
 
-    let count = 0
+    if (appSettings) return appSettings
 
-    const dirname = path.join(__dirname, "(data)")
-    const files = await fs.readdir(dirname)
-
-    for (const file of files) {
-        const filePath = path.join(dirname, file)
-        // https://nodejs.org/en/learn/manipulating-files/reading-files-with-nodejs
-        const content = await fs.readFile(filePath, "utf8")
-        appSettings = JSON.parse(content)
-
-        // cache by year, expected manual cache invalidations
-        await cacheService.trySetAsync(cache, appSettings)
-    }
+    appSettings = factory.buildMasterDataRepository().getAppSettingsAsync()
+    await cacheService.trySetAsync(cacheService, appSettings)
 
     return NextResponse.json(appSettings)
 }

@@ -8,7 +8,7 @@ export type CacheService = {
      * @returns 1 if succeed
      * @returns -1 if failed
      */
-    trySetAsync(key: string, data: any, ttl: number): Promise<number>
+    trySetAsync(key: string, data: any, ttl?: number): Promise<number>
 
     /**
      * Cache data retrieve

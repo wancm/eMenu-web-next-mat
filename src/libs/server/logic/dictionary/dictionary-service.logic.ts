@@ -4,6 +4,10 @@ import { CacheService } from "@/libs/server/types/services/cache-service"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { CONSTANTS } from "@/libs/shared/constants"
 import { util } from "@/libs/shared/utils/util"
+import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
+import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
+import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
 
 
 export class DictionaryServiceLogic implements DictionaryService {
@@ -12,21 +16,72 @@ export class DictionaryServiceLogic implements DictionaryService {
 
 
     constructor(private cacheService: CacheService,
+                private masterDataRepository: MasterDataRepository,
                 private dictionaryRepository: DictionaryRepository) {
     }
 
     async loadDictionaryAsync(businessUnitId: string, countryCode: string, languages: string[]): Promise<Dictionary | undefined> {
         if (!languages || languages.length === 0) {
-            languages = ["en"]
+            languages = [await this.getCountryDefaultLanguageAsync(countryCode)]
+        }
+
+        for (let i = 0; i < languages.length; i++) {
+            const key = `DICTIONARY-${languages[i]}-${countryCode}-${businessUnitId ?? ""}`
+            const cache = await this.cacheService.tryGetAsync<Dictionary>(key)
+            if (cache) {
+                if ((cache as any) === CONSTANTS.CACHE_DATA_NULL) continue
+                return cache
+            }
+
+            const dictionary = await this.loadAsync(businessUnitId, countryCode, languages[i])
+            await this.cacheService.trySetAsync(key, dictionary ?? CONSTANTS.CACHE_DATA_NULL)
+
+            if (dictionary) {
+                return dictionary
+            }
         }
 
         return undefined
     }
 
+    private async getCountryDefaultLanguageAsync(countryCode: string): Promise<string> {
+
+        const key = `APP-SETTINGS-COUNTRY_${countryCode}-DEFAULT-LANGUAGE`
+        let defaultLanguage = this.cacheService.tryGetAsync<string>(key)
+
+        if (defaultLanguage) return defaultLanguage
+
+        const appSettings = await this.masterDataRepository.getAppSettingsAsync()
+
+        if (!appSettings?.countriesSettings || appSettings.countriesSettings.length == 0)
+            // we have no other choice but to return 'en' language
+            return CONSTANTS.EN
+
+        // try read default language by exact match of country code
+        const countrySettings = appSettings.countriesSettings.find(c => c.countryCode.isEqual(countryCode))
+
+        if (countrySettings?.defaultLanguage) {
+            await this.cacheService.trySetAsync(key, countrySettings.defaultLanguage)
+            return countrySettings.defaultLanguage
+        }
+
+        // try read the default language by country code === 'default'
+        const defaultSettings = appSettings.countriesSettings.find(c => c.countryCode.isEqual(CONSTANTS.DEFAULT))
+
+        if (defaultSettings?.defaultLanguage) {
+            await this.cacheService.trySetAsync(key, defaultSettings.defaultLanguage)
+            return defaultSettings.defaultLanguage
+        }
+
+        await this.cacheService.trySetAsync(key, CONSTANTS.EN)
+        // we have no other choice but to return 'en' language
+        return CONSTANTS.EN
+    }
+
     private async loadAsync(businessUnitId: string, countryCode: string, language: string): Promise<Dictionary | undefined> {
 
         // load by language code to get the default dictionary. ex: en
-        const dictionary = await this.dictionaryRepository.loadDictionaryAsync(language)
+        const dictionary = await this.dictionaryRepository.loadDictionaryAsync(language.toLowerCase())
 
         if (!dictionary) return undefined
 
@@ -38,16 +93,7 @@ export class DictionaryServiceLogic implements DictionaryService {
         const countryDictionary = await this.dictionaryRepository.loadDictionaryAsync(countryKey)
 
         if (countryDictionary?.web?.contents) {
-            dictionary.web.contents.forEach(content => {
-                // try get override-able content
-                const found = dictionary.web.contents.find(c => c.key.isEqual(content.key)) as any
-
-                // if overridden content is available
-                if (found) {
-                    // override the properties if applicable
-                    this.objPropOverridden(content, found)
-                }
-            })
+            this.dictWebContentsOverridden(dictionary, countryDictionary)
         }
 
         // try override by unit level. ex: en-@businessUnitId
@@ -58,31 +104,37 @@ export class DictionaryServiceLogic implements DictionaryService {
         const unitDictionary = await this.dictionaryRepository.loadDictionaryAsync(unitKey)
 
         if (unitDictionary?.web?.contents) {
-            unitDictionary.web.contents.forEach(content => {
-                // try get override-able content
-                const found = dictionary.web.contents.find(c => c.key.isEqual(content.key)) as any
-
-                // if overridden content is available
-                if (found) {
-                    // override the properties if applicable
-                    this.objPropOverridden(content, found)
-                }
-            })
+            this.dictWebContentsOverridden(dictionary, unitDictionary)
         }
 
         return dictionary
     }
 
+    private dictWebContentsOverridden(ori: Dictionary, lookForPropToOverridden: Dictionary) {
+        ori.web.contents.forEach(content => {
+            // try get override-able content
+            const found = lookForPropToOverridden.web.contents.find(c => c.key.isEqual(content.key)) as any
+
+            // if overridden content is available
+            if (found) {
+                // override the properties if applicable
+                this.objPropOverridden(content, found)
+            }
+        })
+    }
+
     private objPropOverridden(obj: any, objToCheckForOverrideableProp: any) {
         Object.keys(obj).forEach((key: string) => {
+
+            if (key === "key") return
 
             // if property is an object type
             if (util.isObject(objToCheckForOverrideableProp[key])) {
                 // recursive loop to check for override-able property
                 this.objPropOverridden(obj[key], objToCheckForOverrideableProp[key])
             } else {
-                // if override-able property is available
-                if (objToCheckForOverrideableProp[key]) {
+                // if overridden prop available
+                if (!util.isNil(objToCheckForOverrideableProp[key])) {
                     // override the property
                     obj[key] = objToCheckForOverrideableProp[key]
                 }
@@ -94,5 +146,44 @@ export class DictionaryServiceLogic implements DictionaryService {
     updateContentAsync(businessUnitId: string, countryCode: string, language: string, key: string, content: string): Promise<number> {
         throw new Error("Method not implemented.")
     }
+}
 
+
+if (import.meta.vitest) {
+    const { describe, expect, test, beforeEach } = import.meta.vitest
+
+    const masterDataRepository = new MongodbMasterDataRepository()
+
+    beforeEach(async (context) => {
+        await masterDataRepository.startupAsync()
+    })
+
+    describe("Dictionary load test", () => {
+
+        const test1 = ".loadAsync()"
+        test(test1, async () => {
+            console.time(test1)
+
+            const cacheService = new MemoryCacheService()
+
+            const masterDataRepo = new MongodbMasterDataRepository()
+            await masterDataRepo.startupAsync()
+
+            const dictionaryRepo = new MongodbDictionaryRepository()
+            await dictionaryRepo.startupAsync()
+
+            const service = new DictionaryServiceLogic(cacheService,
+                masterDataRepo,
+                dictionaryRepo)
+
+            const dictionary = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
+
+            expect(dictionary?.web.contents.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+
+            const dictionary2 = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
+            expect(dictionary2?.web.contents.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+
+            console.timeEnd(test1)
+        }, 1200000)
+    })
 }

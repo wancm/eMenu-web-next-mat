@@ -6,7 +6,7 @@ import { appMongodb } from "@/libs/server/data/mongodb/mongodb-database"
 import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import "@/libs/shared/extension-methods"
 import { ShopsRepository } from "@/libs/server/types/repositories/shops-repository"
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 
 export class MongoDbShopsRepository implements ShopsRepository {
 

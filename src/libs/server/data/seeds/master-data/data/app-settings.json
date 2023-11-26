@@ -1,4 +1,5 @@
 {
+  "identifier": "app-settings",
   "app": "e-menu-web",
   "appInsights": {
     "instrumentationKey": ""

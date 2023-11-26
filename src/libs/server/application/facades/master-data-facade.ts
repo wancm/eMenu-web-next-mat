@@ -2,7 +2,7 @@ import { util } from "@/libs/shared/utils/util"
 import { Country } from "@/libs/shared/types/country"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { CacheService } from "@/libs/server/types/services/cache-service"
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
 import { factory } from "@/libs/server/factory"
 
@@ -22,7 +22,7 @@ class MasterDataFacade {
             return countries
         }
 
-        countries = await this.masterDataRepository.loadCountriesAsync()
+        countries = await this.masterDataRepository.getCountriesAsync()
 
         await this.cacheService.trySetAsync(this.COUNTRIES_CACHE_KEY, countries, -1)
 

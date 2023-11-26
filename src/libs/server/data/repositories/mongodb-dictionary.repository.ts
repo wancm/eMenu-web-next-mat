@@ -4,7 +4,7 @@ import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import "@/libs/shared/extension-methods"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
-import { businessUnitConverter, BusinessUnitEntity } from "@/libs/shared/types/business-unit"
+import { Seed } from "@/libs/server/data/seeds/dictionaries/seed"
 
 export class MongodbDictionaryRepository implements DictionaryRepository {
 
@@ -47,6 +47,7 @@ export class MongodbDictionaryRepository implements DictionaryRepository {
             // --- data seeding -----
             console.log("- Data seed start -")
 
+            await new Seed(this).runAsync()
 
             console.log("- Data seed success -")
         }
@@ -58,8 +59,9 @@ export class MongodbDictionaryRepository implements DictionaryRepository {
 
     async loadDictionaryAsync(identifier: string): Promise<Dictionary> {
         const query = { identifier }
+        const doc = await this.dictionaryCollection.findOne(query)
 
-        return await this.dictionaryCollection.findOne(query)
+        return doc
     }
 
     async saveDictionaryAsync(dictionary: Dictionary): Promise<string> {

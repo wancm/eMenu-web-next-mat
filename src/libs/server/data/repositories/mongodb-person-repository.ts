@@ -4,7 +4,7 @@ import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import { appSettings } from "@/libs/appSettings"
 import "@/libs/shared/extension-methods"
 import { testHelper } from "@/libs/shared/utils/test-helper"
-import { MongodbMasterDataRepository } from "./mongodb-master-data-repository"
+import { MongodbMasterDataRepository } from "./mongodb-master-data.repository"
 import { Person, personConverter, PersonEntity, PersonTypes } from "@/libs/shared/types/person"
 import { AddressTypes, PhoneTypes } from "@/libs/shared/types/contacts"
 import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
@@ -214,7 +214,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.loadCountriesAsync()
+            const countries = await masterDataRepository.getCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockPerson = async (): Promise<Person> => {
@@ -298,7 +298,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.loadCountriesAsync()
+            const countries = await masterDataRepository.getCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockPerson = async (): Promise<Person> => {

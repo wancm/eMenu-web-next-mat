@@ -9,8 +9,6 @@ type LocalCache = {
 
 export class MemoryCacheService implements CacheService {
 
-    /** 1 year, expected cache invalidations to be manual */
-    private readonly defaultTTL = 365 * 24 * 60 * 1000
     private readonly cacheExpiringInterval = 1000
     private readonly cacheMap = new Map<string, any>()
 
@@ -23,7 +21,7 @@ export class MemoryCacheService implements CacheService {
     }
 
 
-    async trySetAsync(key: string, data: any, ttl: number = this.defaultTTL): Promise<number> {
+    async trySetAsync(key: string, data: any, ttl: number = -1): Promise<number> {
         try {
             let expired = this.getExpiryTimestamp(ttl)
 
@@ -67,7 +65,7 @@ export class MemoryCacheService implements CacheService {
         }
     }
 
-    async extendExpiryAsync(key: string, ttl: number = this.defaultTTL): Promise<number> {
+    async extendExpiryAsync(key: string, ttl: number = -1): Promise<number> {
         try {
             if (this.cacheMap.has(key)) {
                 const data = await this.tryGetAsync<any>(key)

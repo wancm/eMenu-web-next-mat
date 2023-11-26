@@ -7,5 +7,5 @@ export type SessionService = {
 
     expiredAsync(id: string): Promise<number>
 
-    resetExpiryAsync(id: string): Promise<number>
+    resetExpiryAsync(id: string, sessionTTL: number): Promise<number>
 }
