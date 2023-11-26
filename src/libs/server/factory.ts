@@ -9,30 +9,72 @@ import { MasterDataRepository } from "@/libs/server/types/repositories/master-da
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { ClientInfoServiceLogic } from "@/libs/server/logic/client-info/client-info-service.logic"
 import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
+import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
+import { DictionaryServiceLogic } from "@/libs/server/logic/dictionary/dictionary-service.logic"
+import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
+import { DictionaryService } from "@/libs/shared/types/services/dictionary.service"
 
-/*** Singleton instances *******/
-const memoryCacheService = new MemoryCacheService()
-const personRepository = new MongoDbPersonRepository()
-const sessionService = new SessionServiceLogic(memoryCacheService)
-const businessUnitRepository = new MongoDbBusinessUnitsRepository()
-const masterDataRepository = new MongodbMasterDataRepository()
-const clientInfoService = new ClientInfoServiceLogic()
+class Factory {
+    private cacheServiceVal: MemoryCacheService | undefined
+    private sessionServiceVal: SessionServiceLogic | undefined
+    private dictionaryServiceVal: DictionaryServiceLogic | undefined
 
-export const factory = {
-    buildCacheService: (): CacheService => {
-        return memoryCacheService
-    },
-    buildSessionService: (): SessionService => {
-        return sessionService
-    },
-    buildClientInfoService: (): ClientInfoService => {
-        return clientInfoService
-    },
-    buildBusinessUnitRepository: (): BusinessUnitsRepository => {
-        return businessUnitRepository
-    },
-    buildMasterDataRepository: (): MasterDataRepository => {
-        return masterDataRepository
-    },
-} as const
+    private personRepositoryVal: MongoDbPersonRepository | undefined
+    private businessUnitRepositoryVal: MongoDbBusinessUnitsRepository | undefined
+    private masterDataRepositoryVal: MongodbMasterDataRepository | undefined
+    private clientInfoServiceVal: ClientInfoServiceLogic | undefined
+    private dictionaryRepositoryVal: MongodbDictionaryRepository | undefined
 
+    cacheService(): CacheService {
+        if (!this.cacheServiceVal) {
+            this.cacheServiceVal = new MemoryCacheService()
+        }
+        return this.cacheServiceVal
+    }
+
+    sessionService(): SessionService {
+        if (!this.sessionServiceVal) {
+            this.sessionServiceVal = new SessionServiceLogic(this.cacheService())
+        }
+        return this.sessionServiceVal
+    }
+
+    clientInfoService(): ClientInfoService {
+        if (!this.clientInfoServiceVal) {
+            this.clientInfoServiceVal = new ClientInfoServiceLogic()
+        }
+        return this.clientInfoServiceVal
+    }
+
+    dictionaryService(): DictionaryService {
+        if (!this.dictionaryServiceVal) {
+            this.dictionaryServiceVal = new DictionaryServiceLogic(this.cacheService(),
+                this.masterDataRepository(),
+                this.dictionaryRepository())
+        }
+        return this.dictionaryServiceVal
+    }
+
+    businessUnitRepository(): BusinessUnitsRepository {
+        if (!this.businessUnitRepositoryVal) {
+            this.businessUnitRepositoryVal = new MongoDbBusinessUnitsRepository()
+        }
+        return this.businessUnitRepositoryVal
+    }
+
+    masterDataRepository(): MasterDataRepository {
+        if (!this.masterDataRepositoryVal) {
+            this.masterDataRepositoryVal = new MongodbMasterDataRepository()
+        }
+        return this.masterDataRepositoryVal
+    }
+
+    dictionaryRepository(): DictionaryRepository {
+        if (!this.dictionaryRepositoryVal) {
+            this.dictionaryRepositoryVal = new MongodbDictionaryRepository()
+        }
+        return this.dictionaryRepositoryVal
+    }
+}
+
+export const factory = new Factory()

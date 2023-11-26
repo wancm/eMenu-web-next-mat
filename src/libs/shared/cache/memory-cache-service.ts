@@ -13,11 +13,11 @@ export class MemoryCacheService implements CacheService {
     private readonly cacheMap = new Map<string, any>()
 
     constructor() {
-        /* c8 ignore start */
-        setInterval(async () => {
-            await this.cacheExpiringAsync()
-        }, this.cacheExpiringInterval)
-        /* c8 ignore end */
+        // /* c8 ignore start */
+        // setInterval(async () => {
+        //     await this.cacheExpiringAsync()
+        // }, this.cacheExpiringInterval)
+        // /* c8 ignore end */
     }
 
 

@@ -6,7 +6,7 @@ export class SessionFacade {
 
     // session lives for 20 minutes
     private sessionTTL = 20 * 60
-    private sessionService: SessionService = serverlessFactory.buildSessionService()
+    private sessionService: SessionService = serverlessFactory.sessionService()
 
     async initAsync(): Promise<Session> {
         return this.sessionService.initAsync(this.sessionTTL)

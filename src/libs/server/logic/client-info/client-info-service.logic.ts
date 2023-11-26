@@ -41,7 +41,7 @@ export class ClientInfoServiceLogic implements ClientInfoService {
         if (req) {
             return {
                 ip: getIp(req),
-                country: getCountry(req),
+                countryCode: getCountry(req),
                 preferredLanguages: getBrowserLanguage(req)
             }
         }

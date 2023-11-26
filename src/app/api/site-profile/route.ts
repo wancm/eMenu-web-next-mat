@@ -5,14 +5,15 @@ const cacheKey = "APP-SETTINGS"
 
 export async function GET() {
 
-    const cacheService = factory.buildCacheService()
+    const cacheService = factory.cacheService()
 
-    let appSettings = await cacheService.tryGetAsync(cacheKey)
+    let cache = await cacheService.tryGetAsync(cacheKey)
 
-    if (appSettings) return appSettings
+    if (cache) return NextResponse.json(cache)
 
-    appSettings = factory.buildMasterDataRepository().getAppSettingsAsync()
-    await cacheService.trySetAsync(cacheService, appSettings)
+    const appSettings = await factory.masterDataRepository().getAppSettingsAsync()
+
+    await cacheService.trySetAsync(cacheKey, appSettings)
 
     return NextResponse.json(appSettings)
 }

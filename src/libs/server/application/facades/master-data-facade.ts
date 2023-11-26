@@ -34,7 +34,7 @@ if (import.meta.vitest) {
     const { describe, expect, test } = import.meta.vitest
     describe("#master-data-facade.ts", () => {
 
-        const facade = new MasterDataFacade(factory.buildMasterDataRepository(), factory.buildCacheService())
+        const facade = new MasterDataFacade(factory.masterDataRepository(), factory.cacheService())
 
         const test1 = ".loadCountries()"
         test(test1, async () => {

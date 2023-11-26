@@ -20,9 +20,9 @@ export class DictionaryServiceLogic implements DictionaryService {
                 private dictionaryRepository: DictionaryRepository) {
     }
 
-    async loadDictionaryAsync(businessUnitId: string, countryCode: string, languages: string[]): Promise<Dictionary | undefined> {
+    async loadDictionaryAsync(businessUnitId: string | undefined, countryCode: string | undefined, languages: string[] | undefined): Promise<Dictionary | undefined> {
         if (!languages || languages.length === 0) {
-            languages = [await this.getCountryDefaultLanguageAsync(countryCode)]
+            languages = [await this.getCountryDefaultLanguageAsync(countryCode ?? "")]
         }
 
         for (let i = 0; i < languages.length; i++) {
@@ -33,7 +33,7 @@ export class DictionaryServiceLogic implements DictionaryService {
                 return cache
             }
 
-            const dictionary = await this.loadAsync(businessUnitId, countryCode, languages[i])
+            const dictionary = await this.loadAsync(businessUnitId ?? "", countryCode ?? "", languages[i])
             await this.cacheService.trySetAsync(key, dictionary ?? CONSTANTS.CACHE_DATA_NULL)
 
             if (dictionary) {
@@ -143,7 +143,7 @@ export class DictionaryServiceLogic implements DictionaryService {
         })
     }
 
-    updateContentAsync(businessUnitId: string, countryCode: string, language: string, key: string, content: string): Promise<number> {
+    updateContentAsync(businessUnitId: string | undefined, countryCode: string | undefined, language: string | undefined, key: string, content: string): Promise<number> {
         throw new Error("Method not implemented.")
     }
 }

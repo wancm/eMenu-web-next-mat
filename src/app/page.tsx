@@ -7,6 +7,8 @@ import Footer from "./ui/footer/footer"
 import { headers } from "next/headers"
 import { GLOBAL_CONSTANTS } from "@/global-constants"
 import { serverlessFactory } from "@/libs/server/serverless-factory"
+import { factory } from "@/libs/server/factory"
+import { DictionaryHandler } from "@/libs/server/logic/dictionary/dictionary.handler"
 
 const retrieveData = async () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/users/3")
@@ -15,7 +17,8 @@ const retrieveData = async () => {
 
 export default async function Home() {
 
-    const client = serverlessFactory.buildClientInfoService().get()
+    const client = factory.clientInfoService().get()
+    const dictionary = await factory.dictionaryService().loadDictionaryAsync(undefined, client?.countryCode, client?.preferredLanguages)
 
     // the data will be included in the first 'document' on the site landing page (/), you could inspect this from the debugger
     const data = await retrieveData()
@@ -45,7 +48,7 @@ export default async function Home() {
                         We make running small restaurant easy for you.
                     </Typography>
                     <div>
-                        <Form data={data}></Form>
+                        <Form dictionary={dictionary}></Form>
                     </div>
                     <div style={{ marginTop: "40px" }}>
                         <Grid container spacing={2} justifyContent="center">

@@ -1,5 +1,5 @@
 export type ClientInfo = {
     ip?: string
-    country?: string
+    countryCode?: string
     preferredLanguages?: string[]
 }

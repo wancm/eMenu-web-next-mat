@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {// read more. how to connect
     requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.SESSION_ID, sessionId)
 
     // set client info
-    const clientInfo = serverlessFactory.buildClientInfoService().get(req)
+    const clientInfo = serverlessFactory.clientInfoService().get(req)
     requestHeaders.set(GLOBAL_CONSTANTS.HTTP_HEADER.CLIENT_INFO, JSON.stringify(clientInfo))
 
     const res = NextResponse.next({

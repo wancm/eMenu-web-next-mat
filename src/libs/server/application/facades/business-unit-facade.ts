@@ -51,8 +51,8 @@ if (import.meta.vitest) {
     describe("#business-unit-facade.ts", () => {
 
         const facade = new BusinessUnitFacade(
-            factory.buildBusinessUnitRepository(),
-            factory.buildSessionService())
+            factory.businessUnitRepository(),
+            factory.sessionService())
 
         const test1 = ".registerAsync()"
         test(test1, async () => {
