@@ -124,7 +124,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.getCountriesAsync()
+            const countries = await masterDataRepository.loadCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockProduct = async (): Promise<Product> => {

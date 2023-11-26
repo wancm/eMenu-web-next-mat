@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import dynamic from "next/dynamic"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryHandler } from "@/libs/server/logic/dictionary/dictionary.handler"
+import { Button, Grid } from "@mui/material"
 
 // https://github.com/react-hook-form/devtools/issues/187
 const DevT: React.ElementType = dynamic(
@@ -69,7 +70,20 @@ export default function QuickStartForm({ dictionary }: { dictionary: Dictionary 
                     <p style={{ color: "red" }}>{errors.location?.message}</p>
                 </div>
 
-                <button type={"submit"}>Submit</button>
+                <div style={{ marginTop: "40px" }}>
+                    <Grid container spacing={2} justifyContent="center">
+                        <Grid item>
+                            <Button type={"submit"} variant="contained" color="primary">
+                                Quick Try
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="outlined" color="primary">
+                                Secondary actions
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </div>
             </form>
 
             <DevT control={control} placement="top-left"/>

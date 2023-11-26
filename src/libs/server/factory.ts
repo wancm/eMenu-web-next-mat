@@ -4,7 +4,7 @@ import { MongoDbPersonRepository } from "@/libs/server/data/repositories/mongodb
 import { SessionService } from "@/libs/server/types/services/session-service"
 import { CacheService } from "@/libs/server/types/services/cache-service"
 import { BusinessUnitsRepository } from "@/libs/server/types/repositories/business-units-repository"
-import { MongoDbBusinessUnitsRepository } from "@/libs/server/data/repositories/mongodb-business-units-repository"
+import { MongodbBusinessUnitsRepository } from "@/libs/server/data/repositories/mongodb-business-units.repository"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { ClientInfoServiceLogic } from "@/libs/server/logic/client-info/client-info-service.logic"
@@ -20,7 +20,7 @@ class Factory {
     private dictionaryServiceVal: DictionaryServiceLogic | undefined
 
     private personRepositoryVal: MongoDbPersonRepository | undefined
-    private businessUnitRepositoryVal: MongoDbBusinessUnitsRepository | undefined
+    private businessUnitRepositoryVal: MongodbBusinessUnitsRepository | undefined
     private masterDataRepositoryVal: MongodbMasterDataRepository | undefined
     private clientInfoServiceVal: ClientInfoServiceLogic | undefined
     private dictionaryRepositoryVal: MongodbDictionaryRepository | undefined
@@ -57,7 +57,7 @@ class Factory {
 
     businessUnitRepository(): BusinessUnitsRepository {
         if (!this.businessUnitRepositoryVal) {
-            this.businessUnitRepositoryVal = new MongoDbBusinessUnitsRepository()
+            this.businessUnitRepositoryVal = new MongodbBusinessUnitsRepository()
         }
         return this.businessUnitRepositoryVal
     }

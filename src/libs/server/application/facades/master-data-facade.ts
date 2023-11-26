@@ -22,7 +22,7 @@ class MasterDataFacade {
             return countries
         }
 
-        countries = await this.masterDataRepository.getCountriesAsync()
+        countries = await this.masterDataRepository.loadCountriesAsync()
 
         await this.cacheService.trySetAsync(this.COUNTRIES_CACHE_KEY, countries, -1)
 

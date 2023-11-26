@@ -11,7 +11,7 @@ export async function GET() {
 
     if (cache) return NextResponse.json(cache)
 
-    const appSettings = await factory.masterDataRepository().getAppSettingsAsync()
+    const appSettings = await factory.masterDataRepository().loadAppSettingsAsync()
 
     await cacheService.trySetAsync(cacheKey, appSettings)
 

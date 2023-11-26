@@ -97,52 +97,6 @@ class Util {
 
     }
 
-    // /**
-    //  * Convert date to unix timestamp milliseconds.
-    //  * @error if input is nil.
-    //  * @error thrown input is not Date type.
-    //  */
-    // dateToTimestamp(date: Date): number {
-    //
-    //     if (this.isNil(date)) throw Error("@date is is nil")
-    //     if (!this.isDate(date)) throw Error("@date is not a date")
-    //
-    //     // https://stackoverflow.com/questions/11893083/convert-normal-date-to-unix-timestamp
-    //
-    //     return Math.floor(date.getTime())
-    // }
-    //
-    // /**
-    //  * Convert unix timestamp in milliseconds to Date.
-    //  * @error if timestamp is nil.
-    //  * @error if timestamp is not Number type.
-    //  */
-    // timestampToDate(timestamp: number): Date {
-    //
-    //     if (this.isNil(timestamp)) throw Error("@timestamp is is nil")
-    //     if (!this.isNumber(timestamp)) throw Error("@timestamp is not a date")
-    //
-    //     // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-    //
-    //     // Create a new JavaScript Date object based on the timestamp
-    //     // multiplied by 1000 so that the argument is in milliseconds, not seconds
-    //     return new Date(timestamp)
-    // }
-    //
-    // /**
-    //  * @returns  UTC Date now.
-    //  */
-    // utcNow(): Date {
-    //     return dayjs.utc().toDate()
-    // }
-    //
-    // /**
-    //  * @returns timestamp UTC now in milliseconds.
-    //  */
-    // timestampUtcNow(): number {
-    //     return this.dateToTimestamp(this.utcNow())
-    // }
-
     /**
      * @returns empty string if input is null
      * @returns the input
@@ -375,58 +329,6 @@ if (import.meta.vitest) {
 
             console.timeEnd(test8)
         })
-
-        // const test9 = ".dateToTimestamp() <=> .timestampToDate()"
-        // test.concurrent(test9, async () => {
-        //     console.time(test9)
-        //
-        //     const now = new Date()
-        //
-        //     const oriTimestamp = util.dateToTimestamp(now)
-        //     expect(oriTimestamp).toBeGreaterThan(0)
-        //
-        //     const resultDate = util.timestampToDate(oriTimestamp)
-        //
-        //     // how to compare equality of 2 dates
-        //     // https://www.freecodecamp.org/news/javascript-date-comparison-how-to-compare-dates-in-js/
-        //
-        //     const oriTime = now.getTime()
-        //     const resultTime = resultDate.getTime()
-        //
-        //     expect(oriTime).equal(resultTime)
-        //
-        //     console.timeEnd(test9)
-        // })
-        //
-        // const test10 = ".timestampNow"
-        // test.concurrent(test10, async () => {
-        //     console.time(test10)
-        //
-        //     // create the confirm method spy
-        //     const dateToTimestampSpy = vi.spyOn(util, "dateToTimestamp")
-        //     const utcNowSpy = vi.spyOn(util, "utcNow")
-        //
-        //     util.timestampUtcNow()
-        //
-        //     // we know util.dateToTimestampSpy() will convert Date to unix timestamp correctly
-        //     // therefore, check if util.dateToTimestampSpy() & util.utcNow() have been called
-        //     expect(utcNowSpy).toHaveBeenCalled()
-        //     expect(dateToTimestampSpy).toHaveBeenCalled()
-        //
-        //     console.timeEnd(test10)
-        // })
-        //
-        // const test11 = ".utcNow"
-        // test.concurrent(test11, async () => {
-        //     console.time(test11)
-        //
-        //     const utcNow = util.utcNow()
-        //
-        //     expect(utcNow).not.toBeNull()
-        //     expect(utcNow).not.toBeUndefined()
-        //
-        //     console.timeEnd(test11)
-        // })
 
         const test12 = ".toNullString"
         test.concurrent(test12, async () => {

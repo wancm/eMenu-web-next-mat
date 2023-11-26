@@ -6,6 +6,7 @@ import "@/libs/shared/extension-methods"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { AppSettings } from "@/libs/server/types/app-settings"
 import { Seed } from "@/libs/server/data/seeds/master-data/seed"
+import { GeneralConverter } from "@/libs/server/data/repositories/general-converter"
 
 export class MongodbMasterDataRepository implements MasterDataRepository {
 
@@ -57,7 +58,7 @@ export class MongodbMasterDataRepository implements MasterDataRepository {
         /* c8 ignore end */
     }
 
-    async getCountriesAsync(): Promise<Country[]> {
+    async loadCountriesAsync(): Promise<Country[]> {
         const query = { identifier: this.COUNTRIES_MASTER_DATA_IDENTIFIER }
 
         const result = await this.masterDataCollection.findOne(query)
@@ -88,13 +89,13 @@ export class MongodbMasterDataRepository implements MasterDataRepository {
         return result.insertedId.toHexString()
     }
 
-    async getAppSettingsAsync(): Promise<AppSettings> {
+    async loadAppSettingsAsync(): Promise<AppSettings> {
         const query = { identifier: this.APP_SETTINGS_IDENTIFIER }
 
         const result = await this.masterDataCollection.findOne(query)
 
         if (result) {
-            return result
+            return GeneralConverter.toDto(result)
         }
 
         return {} as AppSettings
@@ -126,7 +127,7 @@ if (import.meta.vitest) {
         test(test1, async () => {
             console.time(test1)
 
-            const countries = await masterDataRepository.getCountriesAsync()
+            const countries = await masterDataRepository.loadCountriesAsync()
             countries.forEach(country => {
                 expect(country).not.toBeUndefined()
             })

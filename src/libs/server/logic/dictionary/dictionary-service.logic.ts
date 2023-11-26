@@ -51,7 +51,7 @@ export class DictionaryServiceLogic implements DictionaryService {
 
         if (defaultLanguage) return defaultLanguage
 
-        const appSettings = await this.masterDataRepository.getAppSettingsAsync()
+        const appSettings = await this.masterDataRepository.loadAppSettingsAsync()
 
         if (!appSettings?.countriesSettings || appSettings.countriesSettings.length == 0)
             // we have no other choice but to return 'en' language

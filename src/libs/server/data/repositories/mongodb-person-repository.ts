@@ -11,7 +11,7 @@ import { mongodbUtil } from "@/libs/server/data/mongodb/mongodb-util"
 import { util } from "@/libs/shared/utils/util"
 import { businessUnitConverter, BusinessUnitEntity } from "@/libs/shared/types/business-unit"
 import { PersonRepository } from "@/libs/server/types/repositories/person-repository"
-import { MongoDbBusinessUnitsRepository } from "@/libs/server/data/repositories/mongodb-business-units-repository"
+import { MongodbBusinessUnitsRepository } from "@/libs/server/data/repositories/mongodb-business-units.repository"
 
 
 type PersonBusinessUnitEntity = PersonEntity & { businessUnit_docs: BusinessUnitEntity[] }
@@ -197,7 +197,7 @@ if (import.meta.vitest) {
     const { describe, expect, test, beforeEach } = import.meta.vitest
 
     const personRepository = new MongoDbPersonRepository()
-    const businessUnitRepository = new MongoDbBusinessUnitsRepository()
+    const businessUnitRepository = new MongodbBusinessUnitsRepository()
     const masterDataRepository = new MongodbMasterDataRepository()
 
     beforeEach(async (context) => {
@@ -214,7 +214,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.getCountriesAsync()
+            const countries = await masterDataRepository.loadCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockPerson = async (): Promise<Person> => {
@@ -298,7 +298,7 @@ if (import.meta.vitest) {
             const countryCode = "MY"
             const businessUnitId = new ObjectId().toHexString()
 
-            const countries = await masterDataRepository.getCountriesAsync()
+            const countries = await masterDataRepository.loadCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockPerson = async (): Promise<Person> => {

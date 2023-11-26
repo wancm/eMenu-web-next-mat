@@ -5,6 +5,7 @@ import "@/libs/shared/extension-methods"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { Seed } from "@/libs/server/data/seeds/dictionaries/seed"
+import { GeneralConverter } from "@/libs/server/data/repositories/general-converter"
 
 export class MongodbDictionaryRepository implements DictionaryRepository {
 
@@ -60,8 +61,7 @@ export class MongodbDictionaryRepository implements DictionaryRepository {
     async loadDictionaryAsync(identifier: string): Promise<Dictionary> {
         const query = { identifier }
         const doc = await this.dictionaryCollection.findOne(query)
-
-        return doc
+        return GeneralConverter.toDto(doc)
     }
 
     async saveDictionaryAsync(dictionary: Dictionary): Promise<string> {

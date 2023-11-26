@@ -28,7 +28,7 @@ export class Seed {
 
     private async seedAppSettingsAsync() {
 
-        const appSettings = await this.masterDataRepository.getAppSettingsAsync()
+        const appSettings = await this.masterDataRepository.loadAppSettingsAsync()
         if (appSettings?.app) return
 
         const dirname = path.join(__dirname, "data")
@@ -82,7 +82,7 @@ export class Seed {
 
     private async seedCountriesMasterDataAsync(): Promise<void> {
 
-        const countries = await this.masterDataRepository.getCountriesAsync()
+        const countries = await this.masterDataRepository.loadCountriesAsync()
         if (countries && countries.length > 0) return
 
         const loadedCountries = this.loadCountriesMasterDataFromCountryJs()

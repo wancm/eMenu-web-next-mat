@@ -1,27 +1,22 @@
-import { Button, Container, Grid, Typography } from "@mui/material"
+import { Container, Typography } from "@mui/material"
 import LocalDiningTwoToneIcon from "@mui/icons-material/LocalDiningTwoTone"
 import Form from "./ui/home/quick-start-form"
 
 import Header from "./ui/header/header"
 import Footer from "./ui/footer/footer"
-import { headers } from "next/headers"
-import { GLOBAL_CONSTANTS } from "@/global-constants"
-import { serverlessFactory } from "@/libs/server/serverless-factory"
 import { factory } from "@/libs/server/factory"
 import { DictionaryHandler } from "@/libs/server/logic/dictionary/dictionary.handler"
-
-const retrieveData = async () => {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users/3")
-    return await response.json()
-}
 
 export default async function Home() {
 
     const client = factory.clientInfoService().get()
-    const dictionary = await factory.dictionaryService().loadDictionaryAsync(undefined, client?.countryCode, client?.preferredLanguages)
 
     // the data will be included in the first 'document' on the site landing page (/), you could inspect this from the debugger
-    const data = await retrieveData()
+    const dictionary = await factory.dictionaryService().loadDictionaryAsync(undefined, client?.countryCode, client?.preferredLanguages)
+
+    const dictHandler = new DictionaryHandler(dictionary)
+    const lblTitle = dictHandler.getContent("p-home-title")
+    const lblHeader = dictHandler.getContent("p-home-header")
 
     return (
         <>
@@ -40,29 +35,15 @@ export default async function Home() {
                             <LocalDiningTwoToneIcon
                                 sx={{ marginRight: "40px", fontSize: "60px" }}></LocalDiningTwoToneIcon>
                             <Typography variant="h1" align="center" color="textPrimary" gutterBottom>
-                                e-Menu
+                                {lblTitle?.content}
                             </Typography>
                         </div>
                     </div>
                     <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                        We make running small restaurant easy for you.
+                        {lblHeader?.content}
                     </Typography>
                     <div>
                         <Form dictionary={dictionary}></Form>
-                    </div>
-                    <div style={{ marginTop: "40px" }}>
-                        <Grid container spacing={2} justifyContent="center">
-                            <Grid item>
-                                <Button variant="contained" color="primary">
-                                    See my photos
-                                </Button>
-                            </Grid>
-                            <Grid item>
-                                <Button variant="outlined" color="primary">
-                                    Secondary actions
-                                </Button>
-                            </Grid>
-                        </Grid>
                     </div>
                 </Container>
             </main>

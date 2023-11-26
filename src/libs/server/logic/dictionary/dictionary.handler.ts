@@ -3,7 +3,7 @@ import "@/libs/shared/extension-methods"
 
 export class DictionaryHandler {
 
-    constructor(public dictionary: Dictionary) {
+    constructor(public dictionary: Dictionary | undefined) {
     }
 
     getContent(key: string): DictionaryContent | undefined {

@@ -7,7 +7,7 @@ import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { BusinessUnitsRepository } from "@/libs/server/types/repositories/business-units-repository"
 
-export class MongoDbBusinessUnitsRepository implements BusinessUnitsRepository {
+export class MongodbBusinessUnitsRepository implements BusinessUnitsRepository {
 
     private isStartup = false
     private businessUnitCollection: Collection<BusinessUnitEntity>
@@ -58,16 +58,16 @@ export class MongoDbBusinessUnitsRepository implements BusinessUnitsRepository {
         /* c8 ignore end */
     }
 
-    async loadOneAsync(objId: ObjectId): Promise<BusinessUnit> {
-        const query = { _id: objId }
+    async loadOneAsync(id: string): Promise<BusinessUnit> {
+        const query = { _id: new ObjectId(id) }
 
-        const doc = await this.businessUnitCollection.findOne(query)
+        let doc = await this.businessUnitCollection.findOne(query)
         return businessUnitConverter.toDTO(doc as BusinessUnitEntity)
     }
 
-    async loadManyAsync(objIds: ObjectId[]): Promise<BusinessUnit[]> {
+    async loadManyAsync(ids: string[]): Promise<BusinessUnit[]> {
         const query = {
-            "_id": { "$in": objIds }
+            "_id": { "$in": ids.map(id => new ObjectId(id)) }
         }
 
         const cursor = this.businessUnitCollection.find(query)
@@ -80,21 +80,21 @@ export class MongoDbBusinessUnitsRepository implements BusinessUnitsRepository {
         return businessUnits
     }
 
-    async saveAsync(businessUnit: BusinessUnit, createdBy: string): Promise<ObjectId> {
+    async saveAsync(businessUnit: BusinessUnit, createdBy: string): Promise<string> {
         // convert entity: 5.513ms
         const entity = businessUnitConverter.toEntity(businessUnit, createdBy)
 
         // doc insert: 546.484ms
         const result = await this.businessUnitCollection.insertOne(entity)
 
-        return result.insertedId
+        return result.insertedId.toHexString()
     }
 }
 
 if (import.meta.vitest) {
     const { describe, expect, test, beforeEach } = import.meta.vitest
 
-    const businessUnitRepository = new MongoDbBusinessUnitsRepository()
+    const businessUnitRepository = new MongodbBusinessUnitsRepository()
     const masterDataRepository = new MongodbMasterDataRepository()
 
     beforeEach(async () => {
@@ -111,7 +111,7 @@ if (import.meta.vitest) {
 
             const countryCode = "MY"
 
-            let countries = await masterDataRepository.getCountriesAsync()
+            let countries = await masterDataRepository.loadCountriesAsync()
             const malaysia = countries.find(c => c.code.isEqual(countryCode))
 
             const mockBusinessUnit = async () => {
@@ -128,8 +128,8 @@ if (import.meta.vitest) {
             expect(businessUnit.name).equals(mock.name)
 
             const businessUnits = await businessUnitRepository.loadManyAsync([objId, objId2])
-            expect(businessUnits[0].id).equals(objId.toHexString())
-            expect(businessUnits[1].id).equals(objId2.toHexString())
+            expect(businessUnits[0].id).equals(objId)
+            expect(businessUnits[1].id).equals(objId2)
 
             console.timeEnd(test1)
         }, 12000)

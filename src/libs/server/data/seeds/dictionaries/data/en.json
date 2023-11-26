@@ -12,11 +12,11 @@
       },
       {
         "key": "f-home-name",
-        "content": "Your shop name.",
+        "content": "Your restaurant name",
         "errors": {
-          "required": "Please provide the name of your shop",
-          "min": "Shop name at least 3 characters",
-          "max": "Shop name max 50 characters"
+          "required": "Please provide your restaurant name",
+          "min": "Name at least 3 characters",
+          "max": "Name can have up to max 50 characters"
         },
         "rules": {
           "required": true,
@@ -26,11 +26,11 @@
       },
       {
         "key": "f-home-location",
-        "content": "The location of your shop.",
+        "content": "The location of your restaurant",
         "errors": {
-          "required": "Please provide the location of your shop",
-          "min": "Shop location at least 3 characters",
-          "max": "Shop location max 200 characters"
+          "required": "Please provide the location of your restaurant",
+          "min": "Restaurant location search needs at least 3 characters",
+          "max": "Restaurant location can have up to max 200 characters"
         },
         "rules": {
           "required": true,

@@ -1,10 +1,9 @@
-import { ObjectId } from "mongodb"
 import { BusinessUnit } from "@/libs/shared/types/business-unit"
 
 export type BusinessUnitsRepository = {
-    loadOneAsync(objId: ObjectId): Promise<BusinessUnit>
+    loadOneAsync(id: string): Promise<BusinessUnit>
 
-    loadManyAsync(objIds: ObjectId[]): Promise<BusinessUnit[]>
+    loadManyAsync(ids: string[]): Promise<BusinessUnit[]>
 
-    saveAsync(businessUnit: BusinessUnit, createdBy: string): Promise<ObjectId>
+    saveAsync(businessUnit: BusinessUnit, createdBy: string): Promise<string>
 }
