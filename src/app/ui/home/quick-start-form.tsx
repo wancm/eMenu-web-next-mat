@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form"
 import dynamic from "next/dynamic"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryHandler } from "@/libs/server/logic/dictionary/dictionary.handler"
-import { Button, Grid } from "@mui/material"
+import { Button, Grid, TextField, Typography } from "@mui/material"
+import { createDraftBusinessUnit } from "@/app/ui/home/actions"
 
 // https://github.com/react-hook-form/devtools/issues/187
 const DevT: React.ElementType = dynamic(
@@ -14,21 +15,22 @@ const DevT: React.ElementType = dynamic(
 
 
 type FormValues = {
-    name: string;
-    location: string;
+    fcRestaurantName: string;
+    fcRestaurantLocation: string;
 }
 
 
 export default function QuickStartForm({ dictionary }: { dictionary: Dictionary | undefined }) {
 
-    const dictHandler = new DictionaryHandler(dictionary)
-    const fcName = dictHandler.getContent("f-home-name")
-    const fcLocation = dictHandler.getContent("f-home-location")
+    const fcName = new DictionaryHandler(dictionary, "f-restaurant-name")
+    const fcLocation = new DictionaryHandler(dictionary, "f-restaurant-location")
+    const btnQuickTry = new DictionaryHandler(dictionary, "p-home-btn-quick-try")
+    const btnLearnMore = new DictionaryHandler(dictionary, "p-home-btn-learn-more")
 
     const form = useForm<FormValues>({
         defaultValues: {
-            name: "",
-            location: "",
+            fcRestaurantName: "",
+            fcRestaurantLocation: "",
         }
     })
 
@@ -41,45 +43,39 @@ export default function QuickStartForm({ dictionary }: { dictionary: Dictionary 
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form action={createDraftBusinessUnit}>
                 <div>
-                    <label htmlFor="name">{fcName?.content}</label>
-                    <input type="text" id="name" {...register("name", {
-                        required: fcName?.errors?.required
-                    })} />
-                    <p style={{ color: "red" }}>{errors.name?.message}</p>
+                    <Typography variant="subtitle2" align="center" color="textSecondary" paragraph>
+                        {fcName?.label}
+                    </Typography>
+                    <TextField id="fcRestaurantName" label={fcName?.form?.placeholder}
+                               variant="standard" {...register("fcRestaurantName", {
+                        required: fcName?.form?.errors?.required
+                    })}/>
+                    <p style={{ color: "red" }}>{errors.fcRestaurantName?.message}</p>
                 </div>
 
                 <div>
-                    <label htmlFor="location">{fcLocation?.content}</label>
-                    <input type="text" id="location" {...register("location", {
-                        validate: {
-                            tooFar: (fieldValue: string) => {
-                                return true
-                                //return "location is too far"
-                            },
-                            tooNear: (fieldValue: string) => {
-                                return true
-                                //return "location is too near"
-                            },
-                            aha: (fieldValue: string) => {
-                                return true
-                            }
-                        }
-                    })} />
-                    <p style={{ color: "red" }}>{errors.location?.message}</p>
+                    <Typography variant="body1" align="center" color="textPrimary" gutterBottom>
+                        {fcLocation?.label}
+                    </Typography>
+                    <TextField id="fcRestaurantLocation" label={fcLocation?.form?.placeholder}
+                               variant="standard" {...register("fcRestaurantLocation", {
+                        required: fcLocation?.form?.errors?.required
+                    })}/>
+                    <p style={{ color: "red" }}>{errors.fcRestaurantLocation?.message}</p>
                 </div>
 
                 <div style={{ marginTop: "40px" }}>
                     <Grid container spacing={2} justifyContent="center">
                         <Grid item>
                             <Button type={"submit"} variant="contained" color="primary">
-                                Quick Try
+                                {btnQuickTry?.label}
                             </Button>
                         </Grid>
                         <Grid item>
                             <Button variant="outlined" color="primary">
-                                Secondary actions
+                                {btnLearnMore?.label}
                             </Button>
                         </Grid>
                     </Grid>

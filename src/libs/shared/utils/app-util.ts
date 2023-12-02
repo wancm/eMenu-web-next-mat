@@ -105,6 +105,12 @@ export class AppUtil {
         return val as string
     }
 
+    static isObjectEmpty(val: any): boolean {
+        if (!val) return true
+        if (!this.isObject(val)) return true
+        return Object.keys(val).length > 0
+    }
+
     static mapSetJsonStringify(map: Map<string, any>): string {
 
         // https://www.youtube.com/watch?v=hubQQ3F337A

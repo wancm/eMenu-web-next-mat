@@ -1,7 +1,8 @@
 import { ObjectId } from "mongodb"
 
 export class GeneralConverter {
-    static toDto(mongodbObj: any) {
+    static toDto<T>(mongodbObj: any): T | undefined {
+        if (!mongodbObj) return undefined
         const val = {
             ...mongodbObj
         }
@@ -19,6 +20,6 @@ export class GeneralConverter {
         if (val._id)
             val._id = (val._id as ObjectId).toHexString()
 
-        return val
+        return val as T
     }
 }

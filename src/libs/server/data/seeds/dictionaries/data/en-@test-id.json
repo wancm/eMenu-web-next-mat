@@ -4,9 +4,11 @@
     "contents": [
       {
         "key": "f-home-name",
-        "rules": {
-          "required": false,
-          "min": 5
+        "form": {
+          "rules": {
+            "required": false,
+            "min": 5
+          }
         }
       }
     ]

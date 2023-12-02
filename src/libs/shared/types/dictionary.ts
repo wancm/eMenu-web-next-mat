@@ -1,7 +1,6 @@
-export type DictionaryContent = {
-    key: string;
-    content: string;
-    category?: string;
+export type DictionaryForm = {
+    formControlName: string
+    placeholder?: string;
     hint?: string;
     errors?: {
         validate?: string;
@@ -16,6 +15,13 @@ export type DictionaryContent = {
         max?: number;
         pattern?: RegExp
     }
+}
+
+export type DictionaryContent = {
+    key: string;
+    label: string;
+    category?: string;
+    form?: DictionaryForm
 }
 
 export type DictionaryContentFields = keyof DictionaryContent

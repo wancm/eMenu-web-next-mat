@@ -4,7 +4,6 @@ import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import "@/libs/shared/extension-methods"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
-import { Seed } from "@/libs/server/data/seeds/dictionaries/seed"
 import { GeneralConverter } from "@/libs/server/data/repositories/general-converter"
 
 export class MongodbDictionaryRepository implements DictionaryRepository {
@@ -44,13 +43,6 @@ export class MongodbDictionaryRepository implements DictionaryRepository {
             }, { name: "identifier_asc" })
 
             console.log(`${MONGO_DB_CONSTANT.COLLECTION_DICTIONARIES} db collection indexes created: ${indexCreatedResult} `)
-
-            // --- data seeding -----
-            console.log("- Data seed start -")
-
-            await new Seed(this).runAsync()
-
-            console.log("- Data seed success -")
         }
 
         this.isStartup = true
@@ -58,7 +50,7 @@ export class MongodbDictionaryRepository implements DictionaryRepository {
         /* c8 ignore end */
     }
 
-    async loadDictionaryAsync(identifier: string): Promise<Dictionary> {
+    async loadDictionaryAsync(identifier: string): Promise<Dictionary | undefined> {
         const query = { identifier }
         const doc = await this.dictionaryCollection.findOne(query)
         return GeneralConverter.toDto(doc)

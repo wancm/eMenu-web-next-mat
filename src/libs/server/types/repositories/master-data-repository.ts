@@ -2,7 +2,7 @@ import { Country } from "@/libs/shared/types/country"
 import { AppSettings } from "@/libs/server/types/app-settings"
 
 export type MasterDataRepository = {
-    loadAppSettingsAsync(): Promise<AppSettings>
+    loadAppSettingsAsync(): Promise<AppSettings | undefined>
 
     loadCountriesAsync(): Promise<Country[]>
 

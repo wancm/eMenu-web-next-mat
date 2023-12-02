@@ -24,7 +24,7 @@ export class BusinessUnitFacade {
                 private readonly sessionService: SessionService) {
     }
 
-    async registerAsync(param: RegisterParam): Promise<ObjectId> {
+    async registerAsync(param: RegisterParam): Promise<string> {
 
         const result = RegisterParamSchema.safeParse(param)
 

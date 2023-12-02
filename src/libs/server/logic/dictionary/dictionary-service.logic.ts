@@ -8,6 +8,8 @@ import { MasterDataRepository } from "@/libs/server/types/repositories/master-da
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
 import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
+import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
+import { ClientInfoServiceLogic } from "@/libs/server/logic/client-info/client-info-service.logic"
 
 
 export class DictionaryServiceLogic implements DictionaryService {
@@ -17,10 +19,16 @@ export class DictionaryServiceLogic implements DictionaryService {
 
     constructor(private cacheService: CacheService,
                 private masterDataRepository: MasterDataRepository,
-                private dictionaryRepository: DictionaryRepository) {
+                private dictionaryRepository: DictionaryRepository,
+                private clientInfoService: ClientInfoService) {
     }
 
-    async loadDictionaryAsync(businessUnitId: string | undefined, countryCode: string | undefined, languages: string[] | undefined): Promise<Dictionary | undefined> {
+    async loadDictionaryAsync(): Promise<Dictionary | undefined> {
+        const client = this.clientInfoService.get()
+        return await this.loadDictionaryWithParamsAsync(undefined, client?.countryCode, client?.preferredLanguages)
+    }
+
+    async loadDictionaryWithParamsAsync(businessUnitId: string | undefined, countryCode: string | undefined, languages: string[] | undefined): Promise<Dictionary | undefined> {
         if (!languages || languages.length === 0) {
             languages = [await this.getCountryDefaultLanguageAsync(countryCode ?? "")]
         }
@@ -174,14 +182,15 @@ if (import.meta.vitest) {
 
             const service = new DictionaryServiceLogic(cacheService,
                 masterDataRepo,
-                dictionaryRepo)
+                dictionaryRepo,
+                new ClientInfoServiceLogic())
 
-            const dictionary = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
+            const dictionary = await service.loadDictionaryWithParamsAsync("@test-id", "MY", ["zh", "en"])
 
-            expect(dictionary?.web?.contents?.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+            expect(dictionary?.web?.contents?.find(c => c.key === "f-home-name")?.form?.rules?.required).toBeFalsy()
 
-            const dictionary2 = await service.loadDictionaryAsync("@test-id", "MY", ["zh", "en"])
-            expect(dictionary2?.web?.contents?.find(c => c.key === "f-home-name")?.rules?.required).toBeFalsy()
+            const dictionary2 = await service.loadDictionaryWithParamsAsync("@test-id", "MY", ["zh", "en"])
+            expect(dictionary2?.web?.contents?.find(c => c.key === "f-home-name")?.form?.rules?.required).toBeFalsy()
 
             console.timeEnd(test1)
         }, 1200000)

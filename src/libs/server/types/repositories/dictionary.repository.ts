@@ -1,7 +1,7 @@
-import { Dictionary, DictionaryContentFields } from "@/libs/shared/types/dictionary"
+import { Dictionary } from "@/libs/shared/types/dictionary"
 
 export type DictionaryRepository = {
-    loadDictionaryAsync(identifier: string): Promise<Dictionary>
+    loadDictionaryAsync(identifier: string): Promise<Dictionary | undefined>
 
     saveDictionaryAsync(dictionary: Dictionary): Promise<string>
 

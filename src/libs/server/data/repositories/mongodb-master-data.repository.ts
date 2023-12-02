@@ -5,7 +5,6 @@ import { Country } from "@/libs/shared/types/country"
 import "@/libs/shared/extension-methods"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
 import { AppSettings } from "@/libs/server/types/app-settings"
-import { Seed } from "@/libs/server/data/seeds/master-data/seed"
 import { GeneralConverter } from "@/libs/server/data/repositories/general-converter"
 
 export class MongodbMasterDataRepository implements MasterDataRepository {
@@ -49,8 +48,6 @@ export class MongodbMasterDataRepository implements MasterDataRepository {
             }, { name: "identifier_asc" })
 
             console.log(`${MONGO_DB_CONSTANT.COLLECTION_MASTER_DATA} db collection indexes created: ${indexCreatedResult} `)
-
-            await new Seed(this).runAsync()
         }
 
         this.isStartup = true
@@ -89,7 +86,7 @@ export class MongodbMasterDataRepository implements MasterDataRepository {
         return result.insertedId.toHexString()
     }
 
-    async loadAppSettingsAsync(): Promise<AppSettings> {
+    async loadAppSettingsAsync(): Promise<AppSettings | undefined> {
         const query = { identifier: this.APP_SETTINGS_IDENTIFIER }
 
         const result = await this.masterDataCollection.findOne(query)

@@ -9,7 +9,7 @@ import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mon
 
 /* c8 ignore start */
 
-export class Seed {
+export class MongodbMasterDataSeed {
 
     constructor(private masterDataRepository: MongodbMasterDataRepository) {
     }
@@ -31,7 +31,7 @@ export class Seed {
         const appSettings = await this.masterDataRepository.loadAppSettingsAsync()
         if (appSettings?.app) return
 
-        const dirname = path.join(__dirname, "data")
+        const dirname = path.join(__dirname, "./data")
         const files = await fs.readdir(dirname)
 
         for (const file of files) {
@@ -90,6 +90,8 @@ export class Seed {
     }
 }
 
+export const mongodbMasterDataSeed = new MongodbMasterDataSeed(new MongodbMasterDataRepository())
+
 /* c8 ignore end */
 
 
@@ -107,7 +109,7 @@ if (import.meta.vitest) {
             const repo = new MongodbMasterDataRepository()
             await repo.startupAsync()
 
-            const seed = new Seed(repo)
+            const seed = new MongodbMasterDataSeed(repo)
             const result = await seed.runAsync()
 
             expect(result > -1).toBeTruthy()

@@ -3,7 +3,7 @@ import path from "path"
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
 
-export class Seed {
+export class MongodbDictionarySeed {
     constructor(private dictionaryRepository: MongodbDictionaryRepository) {
     }
 
@@ -11,7 +11,7 @@ export class Seed {
         let count = 0
 
         try {
-            const dirname = path.join(__dirname, "data")
+            const dirname = path.join(__dirname, "./data")
             const files = await fs.readdir(dirname)
             for (const file of files) {
                 const filePath = path.join(dirname, file)
@@ -34,13 +34,15 @@ export class Seed {
     }
 }
 
+export const mongodbDictionarySeed = new MongodbDictionarySeed(new MongodbDictionaryRepository())
+
 if (import.meta.vitest) {
     const { describe, expect, test, beforeEach } = import.meta.vitest
 
     beforeEach(async (context) => {
     })
 
-    describe("#seed.ts", () => {
+    describe("#mongodb-dictionary-mongodb-master-data-seed.ts", () => {
 
         const test1 = ".run()"
         test(test1, async () => {
@@ -49,7 +51,7 @@ if (import.meta.vitest) {
             const repo = new MongodbDictionaryRepository()
             await repo.startupAsync()
 
-            const seed = new Seed(repo)
+            const seed = new MongodbDictionarySeed(repo)
             const result = await seed.runAsync()
 
             expect(result > -1).toBeTruthy()

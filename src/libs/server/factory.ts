@@ -18,11 +18,11 @@ class Factory {
     private cacheServiceVal: MemoryCacheService | undefined
     private sessionServiceVal: SessionServiceLogic | undefined
     private dictionaryServiceVal: DictionaryServiceLogic | undefined
+    private clientInfoServiceVal: ClientInfoServiceLogic | undefined
 
     private personRepositoryVal: MongoDbPersonRepository | undefined
     private businessUnitRepositoryVal: MongodbBusinessUnitsRepository | undefined
     private masterDataRepositoryVal: MongodbMasterDataRepository | undefined
-    private clientInfoServiceVal: ClientInfoServiceLogic | undefined
     private dictionaryRepositoryVal: MongodbDictionaryRepository | undefined
 
     cacheService(): CacheService {
@@ -50,7 +50,8 @@ class Factory {
         if (!this.dictionaryServiceVal) {
             this.dictionaryServiceVal = new DictionaryServiceLogic(this.cacheService(),
                 this.masterDataRepository(),
-                this.dictionaryRepository())
+                this.dictionaryRepository(),
+                this.clientInfoService())
         }
         return this.dictionaryServiceVal
     }
