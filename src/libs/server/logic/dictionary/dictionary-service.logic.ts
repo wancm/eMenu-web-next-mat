@@ -1,6 +1,6 @@
 import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryService } from "@/libs/shared/types/services/dictionary.service"
-import { CacheService } from "@/libs/server/types/services/cache-service"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { CONSTANTS } from "@/libs/shared/constants"
 import { AppUtil } from "@/libs/shared/utils/app-util"

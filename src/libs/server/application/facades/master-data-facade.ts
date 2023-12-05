@@ -1,7 +1,7 @@
 import { AppUtil } from "@/libs/shared/utils/app-util"
 import { Country } from "@/libs/shared/types/country"
 import { MasterDataRepository } from "@/libs/server/types/repositories/master-data-repository"
-import { CacheService } from "@/libs/server/types/services/cache-service"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { factory } from "@/libs/server/factory"
 
 class MasterDataFacade {

@@ -41,6 +41,10 @@ export default function QuickStartForm({ dictionary }: { dictionary: Dictionary 
         console.log("Form Submitted.", data)
     }
 
+    const handleImageChange = (event: any) => {
+        console.log("handleImageChange", event)
+    }
+
     return (
         <>
             <form action={createDraftBusinessUnit}>
@@ -64,6 +68,19 @@ export default function QuickStartForm({ dictionary }: { dictionary: Dictionary 
                         required: fcLocation?.form?.errors?.required
                     })}/>
                     <p style={{ color: "red" }}>{errors.fcRestaurantLocation?.message}</p>
+                </div>
+
+                <div style={{ marginTop: "40px" }}>
+                    <label>
+                        upload image
+                        <input
+                            style={{ display: "none" }}
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            onChange={handleImageChange}
+                        />
+                    </label>
                 </div>
 
                 <div style={{ marginTop: "40px" }}>

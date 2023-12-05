@@ -1,5 +1,5 @@
 import { AppUtil } from "@/libs/shared/utils/app-util"
-import { CacheService } from "@/libs/server/types/services/cache-service"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 type LocalCache = {
@@ -115,7 +115,7 @@ if (import.meta.vitest) {
     beforeEach(async (_) => {
     })
 
-    describe("#memory-cache-service.ts", () => {
+    describe("#memory-cache.service.ts", () => {
 
         const test1 = ".trySetAsync <=> tryGetAsync"
         test.concurrent(test1, async () => {

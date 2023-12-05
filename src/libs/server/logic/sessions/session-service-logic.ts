@@ -1,4 +1,4 @@
-import { CacheService } from "@/libs/server/types/services/cache-service"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { Session } from "@/libs/shared/types/session"
 import { SessionService } from "@/libs/server/types/services/session-service"
 import { AppUtil } from "@/libs/shared/utils/app-util"

@@ -1,7 +1,7 @@
 import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
 import { SessionServiceLogic } from "@/libs/server/logic/sessions/session-service-logic"
 import { SessionService } from "@/libs/server/types/services/session-service"
-import { CacheService } from "@/libs/server/types/services/cache-service"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { ClientInfoServiceLogic } from "@/libs/server/logic/client-info/client-info-service.logic"
 import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
 
