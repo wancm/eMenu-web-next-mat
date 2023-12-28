@@ -1,8 +1,8 @@
-import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
-import { ClientInfo } from "../../types/clilent-info"
-import { NextRequest } from "next/server"
 import { GLOBAL_CONSTANTS } from "@/global-constants"
+import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
 import { headers } from "next/headers"
+import { NextRequest } from "next/server"
+import { ClientInfo } from "../../types/clilent-info"
 
 export const getIp = (req: NextRequest): string | undefined => {
     // https://stackoverflow.com/questions/68338838/how-to-get-the-ip-address-of-the-client-from-server-side-in-next-js-app

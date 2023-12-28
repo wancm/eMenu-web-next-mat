@@ -1,5 +1,5 @@
-import { Country } from "@/libs/shared/types/country"
 import { AppSettings } from "@/libs/server/types/app-settings"
+import { Country } from "@/libs/shared/types/country"
 
 export type MasterDataRepository = {
     loadAppSettingsAsync(): Promise<AppSettings | undefined>

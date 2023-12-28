@@ -1,5 +1,4 @@
-import { AppDateUtil } from "./utils/app-date-util"
-
+import { AppDateUtil } from "@/libs/shared/utils/app-date-util"
 
 declare global {
     interface String {

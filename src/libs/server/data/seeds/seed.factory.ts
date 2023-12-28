@@ -1,5 +1,5 @@
-import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
+import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
 
 class SeedFactory {
 

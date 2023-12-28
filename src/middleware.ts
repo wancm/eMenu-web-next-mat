@@ -1,10 +1,9 @@
-import type { NextRequest } from "next/server"
-import { NextResponse } from "next/server"
 import { GLOBAL_CONSTANTS } from "@/global-constants"
 import { sessionFacade } from "@/libs/server/application/facades/session-facade"
 import "@/libs/shared/extension-methods"
-import { factory } from "@/libs/server/factory"
 import { serverlessFactory } from "@/libs/server/serverless-factory"
+import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 
 export async function middleware(req: NextRequest) {// read more. how to connect multiple middlewares
     // https://stackoverflow.com/questions/76603369/how-to-use-multiple-middlewares-in-next-js-using-the-middleware-ts-file

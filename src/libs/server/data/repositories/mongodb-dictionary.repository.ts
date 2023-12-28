@@ -1,10 +1,10 @@
-import { Collection } from "mongodb"
 import { appMongodb } from "@/libs/server/data/mongodb/mongodb-database"
 import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import "@/libs/shared/extension-methods"
-import { Dictionary } from "@/libs/shared/types/dictionary"
-import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
 import { GeneralConverter } from "@/libs/server/data/repositories/general-converter"
+import { DictionaryRepository } from "@/libs/server/types/repositories/dictionary.repository"
+import { Dictionary } from "@/libs/shared/types/dictionary"
+import { Collection } from "mongodb"
 
 export class MongodbDictionaryRepository implements DictionaryRepository {
 

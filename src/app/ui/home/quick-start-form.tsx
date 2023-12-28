@@ -6,6 +6,7 @@ import { Dictionary } from "@/libs/shared/types/dictionary"
 import { DictionaryHandler } from "@/libs/server/logic/dictionary/dictionary.handler"
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { createDraftBusinessUnit } from "@/app/ui/home/actions"
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto"
 
 // https://github.com/react-hook-form/devtools/issues/187
 const DevT: React.ElementType = dynamic(
@@ -72,7 +73,12 @@ export default function QuickStartForm({ dictionary }: { dictionary: Dictionary 
 
                 <div style={{ marginTop: "40px" }}>
                     <label>
-                        upload image
+                        <span>
+                            <Typography variant="span" align="center" color="textPrimary" gutterBottom>
+                                Upload image
+                            </Typography>
+                            <AddAPhotoIcon/>
+                        </span>
                         <input
                             style={{ display: "none" }}
                             type="file"

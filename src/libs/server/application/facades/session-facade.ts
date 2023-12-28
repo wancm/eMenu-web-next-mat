@@ -1,6 +1,6 @@
-import { Session } from "@/libs/shared/types/session"
-import { SessionService } from "@/libs/server/types/services/session-service"
 import { serverlessFactory } from "@/libs/server/serverless-factory"
+import { SessionService } from "@/libs/server/types/services/session-service"
+import { Session } from "@/libs/shared/types/session"
 
 export class SessionFacade {
 

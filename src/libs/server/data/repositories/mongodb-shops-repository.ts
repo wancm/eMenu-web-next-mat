@@ -1,12 +1,12 @@
-import { Collection, ObjectId, SortDirection } from "mongodb"
 import { appSettings } from "@/libs/appSettings"
-import { Shop, shopConverter, ShopEntity } from "@/libs/shared/types/shop"
-import { testHelper } from "@/libs/shared/utils/test-helper"
 import { appMongodb } from "@/libs/server/data/mongodb/mongodb-database"
 import { MONGO_DB_CONSTANT } from "@/libs/server/data/mongodb/mongodb_const"
 import "@/libs/shared/extension-methods"
-import { ShopsRepository } from "@/libs/server/types/repositories/shops-repository"
 import { MongodbMasterDataRepository } from "@/libs/server/data/repositories/mongodb-master-data.repository"
+import { ShopsRepository } from "@/libs/server/types/repositories/shops-repository"
+import { Shop, shopConverter, ShopEntity } from "@/libs/shared/types/shop"
+import { testHelper } from "@/libs/shared/utils/test-helper"
+import { Collection, ObjectId, SortDirection } from "mongodb"
 
 export class MongoDbShopsRepository implements ShopsRepository {
 
@@ -147,7 +147,7 @@ if (import.meta.vitest) {
                     businessUnitId,
                     persons: [personId, personId2],
                     address: {
-                        countryCode: 'MY'
+                        countryCode: "MY"
                     }
                 }
             }

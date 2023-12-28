@@ -1,5 +1,5 @@
-import { ZodObject } from "zod"
 import { AppUtil } from "@/libs/shared/utils/app-util"
+import { ZodObject } from "zod"
 
 export enum ZodPropConfigType {
     min = "min",

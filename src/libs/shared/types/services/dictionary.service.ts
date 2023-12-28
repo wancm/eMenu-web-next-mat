@@ -1,4 +1,4 @@
-import { Dictionary, DictionaryContent } from "@/libs/shared/types/dictionary"
+import { Dictionary } from "@/libs/shared/types/dictionary"
 
 export type DictionaryService = {
     loadDictionaryAsync(): Promise<Dictionary | undefined>

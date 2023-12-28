@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb"
 import { Product } from "@/libs/shared/types/product"
+import { ObjectId } from "mongodb"
 
 export type ProductRepository = {
     loadOneAsync(objId: ObjectId): Promise<Product>

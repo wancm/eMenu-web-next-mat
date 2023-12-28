@@ -1,9 +1,9 @@
-import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
-import { SessionServiceLogic } from "@/libs/server/logic/sessions/session-service-logic"
-import { SessionService } from "@/libs/server/types/services/session-service"
-import { CacheService } from "@/libs/server/types/services/cache.service"
 import { ClientInfoServiceLogic } from "@/libs/server/logic/client-info/client-info-service.logic"
+import { SessionServiceLogic } from "@/libs/server/logic/sessions/session-service-logic"
+import { CacheService } from "@/libs/server/types/services/cache.service"
 import { ClientInfoService } from "@/libs/server/types/services/client-info.service"
+import { SessionService } from "@/libs/server/types/services/session-service"
+import { MemoryCacheService } from "@/libs/shared/cache/memory-cache-service"
 
 /**
  * Factory that internally building instances that are supported by Vercel Edge function.

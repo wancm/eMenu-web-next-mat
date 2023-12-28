@@ -1,7 +1,7 @@
+import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
+import { Dictionary } from "@/libs/shared/types/dictionary"
 import fs from "fs/promises"
 import path from "path"
-import { Dictionary } from "@/libs/shared/types/dictionary"
-import { MongodbDictionaryRepository } from "@/libs/server/data/repositories/mongodb-dictionary.repository"
 
 export class MongodbDictionarySeed {
     constructor(private dictionaryRepository: MongodbDictionaryRepository) {
